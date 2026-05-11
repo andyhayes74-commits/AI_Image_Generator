@@ -45,6 +45,7 @@ Status: `Planning / Docs Update`
 | Q-0011 | Create safe fixtures and validation scripts | tests | Todo | Must happen before live providers |
 | Q-0012 | Create first plugin build plan | plugin | Todo | Should happen before feature implementation |
 | Q-0013 | Create first n8n workflow build plan | n8n | Todo | Should happen before importing/exporting workflow JSON |
+| Q-0014 | Create draft master build outline | docs | Review | Documentation-only full project base plan created in `docs/MASTER_BUILD_OUTLINE.md` |
 
 ---
 
