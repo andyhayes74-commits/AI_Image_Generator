@@ -1,0 +1,10 @@
+{
+  "schema_version": "0.2.0",
+  "decision_id": "imd_continue_001",
+  "job_id": "job_kitchen_blender_demo",
+  "created_at": "2026-05-12T10:05:00Z",
+  "decision": "continue",
+  "reasoning_summary": "Scene and object analysis are sufficient to continue into placement planning.",
+  "loop_count": 0,
+  "preserve_stage_result_ids": ["stage_scene_kitchen_001"]
+}

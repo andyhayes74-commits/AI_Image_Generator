@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.2.0",
+  "validation_id": "val_tv_collision_001",
+  "job_id": "job_lounge_tv_demo",
+  "validated_stage": "placement_planning",
+  "status": "failed",
+  "created_at": "2026-05-12T11:15:00Z",
+  "checks": [
+    {
+      "name": "wall_mount_clearance",
+      "status": "failed",
+      "summary": "The proposed wall-mounted TV overlaps a framed picture and sits too close to the door trim.",
+      "repair_instruction": "Move the TV 25 cm left or ask the client if the framed picture may be removed."
+    },
+    {
+      "name": "viewing_height",
+      "status": "warning",
+      "summary": "The sketched height is slightly above common seated eye level."
+    }
+  ],
+  "recommended_action": "ask_client"
+}

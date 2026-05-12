@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-image-generator/schemas/client_submission.schema.json",
+  "title": "Client Submission",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "submission_id", "submitted_at", "client_reference", "brief", "assets"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.2.0" },
+    "submission_id": { "type": "string", "pattern": "^sub_[A-Za-z0-9_-]+$" },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "client_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["external_user_ref", "project_ref"],
+      "properties": {
+        "external_user_ref": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "project_ref": { "type": "string", "minLength": 1, "maxLength": 120 }
+      }
+    },
+    "brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scene_summary", "object_goal", "placement_intent", "instructions"],
+      "properties": {
+        "scene_summary": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "object_goal": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "placement_intent": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "instructions": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "constraints": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+        "protected_elements": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["asset_id", "declared_role", "media_type", "uri", "description"],
+        "properties": {
+          "asset_id": { "type": "string", "pattern": "^asset_[A-Za-z0-9_-]+$" },
+          "declared_role": { "type": "string", "enum": ["scene_image", "object_reference", "object_sketch", "placement_sketch", "annotation", "style_reference", "manual_or_spec", "other"] },
+          "media_type": { "type": "string", "enum": ["image/jpeg", "image/png", "image/webp", "application/pdf", "text/plain"] },
+          "uri": { "type": "string", "format": "uri" },
+          "description": { "type": "string", "minLength": 1, "maxLength": 1000 }
+        }
+      }
+    },
+    "metadata": { "type": "object", "additionalProperties": true, "default": {} }
+  }
+}

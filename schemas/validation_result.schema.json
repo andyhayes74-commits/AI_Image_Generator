@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-image-generator/schemas/validation_result.schema.json",
+  "title": "Validation Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "validation_id", "job_id", "validated_stage", "status", "created_at", "checks"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.2.0" },
+    "validation_id": { "type": "string", "pattern": "^val_[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "pattern": "^job_[A-Za-z0-9_-]+$" },
+    "validated_stage": { "type": "string", "enum": ["intake", "input_intelligence", "research", "scene_analysis", "object_analysis", "placement_planning", "scene_reengineering", "functional_use", "environmental_effects", "generation", "final_validation", "rework"] },
+    "status": { "type": "string", "enum": ["passed", "failed", "needs_client", "warning"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status", "summary"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "enum": ["passed", "failed", "warning", "not_applicable"] },
+          "summary": { "type": "string", "minLength": 1 },
+          "repair_instruction": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "recommended_action": { "type": "string", "enum": ["continue", "retry_stage", "ask_client", "escalate", "stop"] }
+  }
+}

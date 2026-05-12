@@ -1,0 +1,11 @@
+{
+  "name": "ai-image-generator-contracts",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Contract and schema validation for the AI Image Generator scene integration system.",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test tests/schema-validation.test.js",
+    "validate:fixtures": "node scripts/validate-fixtures.js"
+  }
+}

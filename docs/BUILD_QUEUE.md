@@ -8,9 +8,9 @@ Use this file for small practical tasks. Use `docs/ROADMAP.md` for version direc
 
 ## Active Build
 
-Current active build: `v0.1.0 — Foundation & Architecture Lock`
+Current active build: `v0.2.0 — Contract & Schema Foundation`
 
-Status: `Planning / Docs Update`
+Status: `Review`
 
 ---
 
@@ -41,8 +41,8 @@ Status: `Planning / Docs Update`
 | Q-0007 | Add ImageManager draft design | docs | In Progress | Bounded n8n decision node, no direct broad access |
 | Q-0008 | Add Codex build queue | docs | In Progress | Contract-first, mock-first, schema/test path |
 | Q-0009 | Define plugin-to-n8n integration contract | integration | Todo | Needed before coding the real handoff |
-| Q-0010 | Create schema foundation | schemas | Todo | Job state, submission, stage result, validation, ImageManager decision, questions, rework |
-| Q-0011 | Create safe fixtures and validation scripts | tests | Todo | Must happen before live providers |
+| Q-0010 | Create schema foundation | schemas | Review | v0.2.0 contract schemas for job state, submission, stage result, validation, ImageManager decision, questions, rework, and final result |
+| Q-0011 | Create safe fixtures and validation scripts | tests | Review | Node fixture validation added; invalid ImageManager decision fails as expected |
 | Q-0012 | Create first plugin build plan | plugin | Todo | Should happen before feature implementation |
 | Q-0013 | Create first n8n workflow build plan | n8n | Todo | Should happen before importing/exporting workflow JSON |
 
@@ -72,6 +72,4 @@ Ideas that may be useful later but are not active yet:
 
 ## Current Build Notes
 
-The current docs update is intentionally documentation-only.
-
-No plugin feature code, schemas, tests, workflow JSON, provider calls, or placeholder implementations should be added until a specific build plan approves them.
+The v0.2.0 build is contract-only. It adds schemas, safe fixtures, and local validation commands before plugin features, n8n workflow JSON, live provider calls, or image generation are started.

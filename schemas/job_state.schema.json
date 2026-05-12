@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-image-generator/schemas/job_state.schema.json",
+  "title": "Job State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "job_id", "submission_id", "status", "created_at", "updated_at", "current_stage", "brief", "assets", "history"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.2.0" },
+    "job_id": { "type": "string", "pattern": "^job_[A-Za-z0-9_-]+$" },
+    "submission_id": { "type": "string", "pattern": "^sub_[A-Za-z0-9_-]+$" },
+    "status": { "type": "string", "enum": ["received", "analysing", "planning", "awaiting_client_answer", "generating", "validating", "reworking", "completed", "failed", "cancelled"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "current_stage": { "type": "string", "enum": ["intake", "input_intelligence", "research", "scene_analysis", "object_analysis", "placement_planning", "scene_reengineering", "functional_use", "environmental_effects", "generation", "final_validation", "rework", "delivery"] },
+    "brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scene_summary", "object_goal", "placement_intent", "instructions"],
+      "properties": {
+        "scene_summary": { "type": "string", "minLength": 1 },
+        "object_goal": { "type": "string", "minLength": 1 },
+        "placement_intent": { "type": "string", "minLength": 1 },
+        "instructions": { "type": "string", "minLength": 1 },
+        "constraints": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+        "protected_elements": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["asset_id", "role", "media_type", "uri"],
+        "properties": {
+          "asset_id": { "type": "string", "pattern": "^asset_[A-Za-z0-9_-]+$" },
+          "role": { "type": "string", "enum": ["scene_image", "object_reference", "object_sketch", "placement_sketch", "annotation", "style_reference", "manual_or_spec", "other"] },
+          "media_type": { "type": "string", "enum": ["image/jpeg", "image/png", "image/webp", "application/pdf", "text/plain"] },
+          "uri": { "type": "string", "format": "uri" },
+          "description": { "type": "string" }
+        }
+      },
+      "minItems": 1
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["event_id", "event_type", "created_at", "summary"],
+        "properties": {
+          "event_id": { "type": "string", "pattern": "^evt_[A-Za-z0-9_-]+$" },
+          "event_type": { "type": "string", "enum": ["submission_received", "stage_completed", "validation_completed", "imagemanager_decision", "client_question_created", "client_answer_received", "rework_requested", "final_result_created", "status_changed"] },
+          "created_at": { "type": "string", "format": "date-time" },
+          "summary": { "type": "string", "minLength": 1 },
+          "related_id": { "type": "string" }
+        }
+      }
+    },
+    "stage_result_ids": { "type": "array", "items": { "type": "string", "pattern": "^stage_[A-Za-z0-9_-]+$" }, "default": [] },
+    "validation_ids": { "type": "array", "items": { "type": "string", "pattern": "^val_[A-Za-z0-9_-]+$" }, "default": [] },
+    "open_question_ids": { "type": "array", "items": { "type": "string", "pattern": "^cq_[A-Za-z0-9_-]+$" }, "default": [] },
+    "loop_counts": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 }, "default": {} },
+    "metadata": { "type": "object", "additionalProperties": true, "default": {} }
+  }
+}

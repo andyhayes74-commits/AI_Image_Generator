@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-image-generator/schemas/imagemanager_decision.schema.json",
+  "title": "ImageManager Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "job_id", "created_at", "decision", "reasoning_summary"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.2.0" },
+    "decision_id": { "type": "string", "pattern": "^imd_[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "pattern": "^job_[A-Za-z0-9_-]+$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "decision": { "type": "string", "enum": ["continue", "retry_stage", "ask_client", "route_rework", "approve_final", "escalate", "stop"] },
+    "target_stage": { "type": "string", "enum": ["intake", "input_intelligence", "research", "scene_analysis", "object_analysis", "placement_planning", "scene_reengineering", "functional_use", "environmental_effects", "generation", "final_validation", "rework"] },
+    "reasoning_summary": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "repair_instructions": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+    "question_id": { "type": "string", "pattern": "^cq_[A-Za-z0-9_-]+$" },
+    "loop_count": { "type": "integer", "minimum": 0, "maximum": 10 },
+    "preserve_stage_result_ids": { "type": "array", "items": { "type": "string", "pattern": "^stage_[A-Za-z0-9_-]+$" }, "default": [] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "decision": { "const": "ask_client" } }, "required": ["decision"] },
+      "then": { "required": ["question_id"] }
+    },
+    {
+      "if": { "properties": { "decision": { "enum": ["retry_stage", "route_rework"] } }, "required": ["decision"] },
+      "then": { "required": ["target_stage", "repair_instructions"] }
+    }
+  ]
+}

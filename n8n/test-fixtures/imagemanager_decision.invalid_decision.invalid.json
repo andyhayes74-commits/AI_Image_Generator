@@ -1,0 +1,8 @@
+{
+  "schema_version": "0.2.0",
+  "decision_id": "imd_invalid_001",
+  "job_id": "job_kitchen_blender_demo",
+  "created_at": "2026-05-12T10:06:00Z",
+  "decision": "invent_new_plan_without_validation",
+  "reasoning_summary": "This fixture is intentionally invalid because the decision is not in the allowed ImageManager routing enum."
+}

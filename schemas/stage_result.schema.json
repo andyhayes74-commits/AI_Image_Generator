@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-image-generator/schemas/stage_result.schema.json",
+  "title": "Stage Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "stage_result_id", "job_id", "stage", "status", "created_at", "summary", "outputs"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.2.0" },
+    "stage_result_id": { "type": "string", "pattern": "^stage_[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "pattern": "^job_[A-Za-z0-9_-]+$" },
+    "stage": { "type": "string", "enum": ["intake", "input_intelligence", "research", "scene_analysis", "object_analysis", "placement_planning", "scene_reengineering", "functional_use", "environmental_effects", "generation", "final_validation", "rework"] },
+    "status": { "type": "string", "enum": ["passed", "failed", "needs_client", "skipped"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "outputs": { "type": "object", "additionalProperties": true },
+    "evidence_asset_ids": { "type": "array", "items": { "type": "string", "pattern": "^asset_[A-Za-z0-9_-]+$" }, "default": [] },
+    "unknowns": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+    "warnings": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] }
+  }
+}
