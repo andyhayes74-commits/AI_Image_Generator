@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.2.0",
+  "final_result_id": "final_blender_001",
+  "job_id": "job_kitchen_blender_demo",
+  "created_at": "2026-05-12T14:00:00Z",
+  "status": "approved",
+  "summary": "The compact black blender is integrated on the kitchen worktop with plausible scale, perspective, contact shadow, and cable routing to the visible socket.",
+  "versions": [
+    {
+      "version_id": "ver_blender_primary_001",
+      "role": "primary",
+      "uri": "https://example.invalid/results/kitchen-blender-primary.jpg",
+      "approved": true,
+      "notes": "Fake fixture URI for schema validation only."
+    },
+    {
+      "version_id": "ver_blender_preview_001",
+      "role": "preview",
+      "uri": "https://example.invalid/results/kitchen-blender-preview.jpg",
+      "approved": true
+    }
+  ],
+  "validation_id": "val_blender_final_001",
+  "delivery_notes": "Fixture only; no real image was generated."
+}

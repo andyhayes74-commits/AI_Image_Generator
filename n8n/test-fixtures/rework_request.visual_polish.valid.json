@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.2.0",
+  "rework_id": "rw_blender_polish_001",
+  "job_id": "job_kitchen_blender_demo",
+  "requested_at": "2026-05-12T13:00:00Z",
+  "requested_by": "client",
+  "rework_type": "visual_polish",
+  "instructions": "The blender placement is correct, but please make the shadow softer and reduce the glossy reflection on the jug.",
+  "preserve": ["object placement", "visible socket", "plugged-in cable"],
+  "target_version_id": "ver_blender_primary_001"
+}

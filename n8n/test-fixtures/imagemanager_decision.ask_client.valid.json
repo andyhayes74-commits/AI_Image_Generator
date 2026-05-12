@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.2.0",
+  "decision_id": "imd_ask_client_001",
+  "job_id": "job_lounge_tv_demo",
+  "created_at": "2026-05-12T11:16:00Z",
+  "decision": "ask_client",
+  "question_id": "cq_tv_picture_removal_001",
+  "reasoning_summary": "The TV cannot be mounted at the sketched location without moving an existing framed picture, which requires client approval.",
+  "loop_count": 1,
+  "preserve_stage_result_ids": ["stage_scene_lounge_001"]
+}

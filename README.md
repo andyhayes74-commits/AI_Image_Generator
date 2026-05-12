@@ -23,11 +23,11 @@ The image model should not freestyle the answer. n8n should build a validated co
 
 ## Current Version
 
-Current version: `v0.1.0-planning`
+Current version: `v0.2.0-contracts`
 
-Status: `Planning / documentation foundation`
+Status: `Contract & schema foundation in review`
 
-This repository currently contains the project documentation framework only. Product feature code and live n8n workflow JSON have not been started yet.
+This repository now contains the project documentation framework plus contract-only JSON schemas, safe fixtures, and schema validation tooling. Product feature code and live n8n workflow JSON have not been started yet.
 
 ---
 
@@ -118,7 +118,11 @@ AI_Image_Generator/
 ├── plugin/                 # WordPress plugin source
 ├── n8n/                    # n8n workflow exports, prompts, notes, and fixtures
 │   ├── workflows/          # Exported workflow JSON files
-│   └── notes/              # n8n-specific notes and mapping docs
+│   ├── notes/              # n8n-specific notes and mapping docs
+│   └── test-fixtures/      # Safe fake JSON packets for contract validation
+├── schemas/                # JSON Schema contracts shared by WordPress, n8n, and ImageManager
+├── scripts/                # Local validation scripts
+├── tests/                  # Node test runner tests for contract validation
 ├── docs/                   # Shared planning, architecture, bugs, queue, build plans
 ├── AGENTS.md               # AI agent working rules
 └── README.md               # Project overview
@@ -127,14 +131,26 @@ AI_Image_Generator/
 Future Codex-friendly folders may include:
 
 ```text
-schemas/                    # JSON schemas for job state and workflow contracts
-tests/                      # Schema, fixture, plugin, and workflow-simulator tests
-scripts/                    # Validation scripts and mock workflow checks
 n8n/prompts/                # ImageManager and worker prompts
-n8n/test-fixtures/          # Safe fake input/output packets
 ```
 
-These folders should be added by a planned build, not as accidental placeholders.
+The schema, test, script, and n8n fixture folders are intentionally part of the v0.2.0 contract foundation. They are not plugin features, n8n workflow exports, provider calls, or image generation code.
+
+---
+
+## Contract Validation
+
+v0.2.0 starts the contract-first implementation path. The schemas in `schemas/` define shared JSON packets for client submissions, job state, stage results, validation results, ImageManager decisions, client questions and answers, rework requests, and final delivery. The fixtures in `n8n/test-fixtures/` are safe fake examples used to prove the contracts before any plugin feature, n8n workflow JSON, live provider call, or image generation work begins.
+
+Run the contract checks locally with:
+
+```bash
+npm install
+npm test
+npm run validate:fixtures
+```
+
+The validation suite expects all `*.valid.json` fixtures to pass and the intentionally invalid ImageManager fixture to fail. That expected failure confirms that unsupported ImageManager routing decisions are rejected by the schema.
 
 ---
 

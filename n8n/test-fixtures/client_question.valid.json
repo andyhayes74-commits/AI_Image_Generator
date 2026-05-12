@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.2.0",
+  "question_id": "cq_tv_picture_removal_001",
+  "job_id": "job_lounge_tv_demo",
+  "created_at": "2026-05-12T11:16:05Z",
+  "status": "open",
+  "priority": "blocking",
+  "question": "May the framed picture be removed or moved so the wall-mounted TV can fit safely?",
+  "context_summary": "The requested TV position overlaps the picture and has poor clearance near the door trim.",
+  "answer_type": "single_choice",
+  "options": ["Move the framed picture", "Keep the picture and move the TV", "Ask me for a new placement"]
+}

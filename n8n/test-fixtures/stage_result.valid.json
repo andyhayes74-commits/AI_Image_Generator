@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.2.0",
+  "stage_result_id": "stage_scene_kitchen_001",
+  "job_id": "job_kitchen_blender_demo",
+  "stage": "scene_analysis",
+  "status": "passed",
+  "created_at": "2026-05-12T10:03:00Z",
+  "summary": "The kitchen worktop is a usable horizontal plane with a visible wall socket above the intended placement area.",
+  "confidence": 0.88,
+  "outputs": {
+    "scene_type": "kitchen",
+    "usable_surfaces": ["pale stone worktop"],
+    "lighting": "soft daylight from camera-left",
+    "important_features": ["double socket", "tile grout lines", "mugs near back wall"]
+  },
+  "evidence_asset_ids": ["asset_scene_kitchen_001"],
+  "unknowns": [],
+  "warnings": ["Exact worktop depth is estimated from visual evidence only."]
+}

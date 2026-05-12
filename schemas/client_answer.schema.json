@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-image-generator/schemas/client_answer.schema.json",
+  "title": "Client Answer",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "answer_id", "question_id", "job_id", "answered_at", "answer"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.2.0" },
+    "answer_id": { "type": "string", "pattern": "^ca_[A-Za-z0-9_-]+$" },
+    "question_id": { "type": "string", "pattern": "^cq_[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "pattern": "^job_[A-Za-z0-9_-]+$" },
+    "answered_at": { "type": "string", "format": "date-time" },
+    "answer": { "type": "string", "minLength": 1, "maxLength": 4000 },
+    "selected_options": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+    "asset_ids": { "type": "array", "items": { "type": "string", "pattern": "^asset_[A-Za-z0-9_-]+$" }, "default": [] }
+  }
+}

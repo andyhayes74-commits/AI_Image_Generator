@@ -172,3 +172,102 @@ Docs:
 - n8n credentials must never be exported into repo workflow JSON.
 - The architecture is intentionally ambitious; Codex should implement it in small verified slices.
 - The next build should focus on schemas, fixtures, and validation before plugin/n8n feature code.
+
+---
+
+## v0.2.0 — Contract & Schema Foundation
+
+Status: `Review`
+Branch: `current branch`
+Date Created: `2026-05-12`
+
+### Goal
+
+Create the formal, provider-neutral contract foundation shared by WordPress, n8n, ImageManager, validation stages, rework, and final delivery before any product feature code or workflow JSON is built.
+
+### Scope
+
+Included:
+
+- Add JSON Schema contracts for client submission, job state, stage result, validation result, ImageManager decision, client question, client answer, rework request, and final result packets.
+- Add safe fake n8n test fixtures covering the primary contracts.
+- Add one intentionally invalid ImageManager decision fixture to prove unsupported routing decisions are rejected.
+- Add simple Node validation tooling for the schema subset used by these contracts.
+- Add npm scripts for test and fixture validation.
+- Document the contract-first validation commands.
+
+Out of scope:
+
+- WordPress plugin feature code.
+- WordPress UI.
+- n8n workflow JSON exports.
+- Live provider calls.
+- Image generation.
+- Real client data, production URLs, secrets, credentials, webhook secrets, or provider tokens.
+
+### Files Expected To Change
+
+Schemas:
+
+- `schemas/job_state.schema.json`
+- `schemas/client_submission.schema.json`
+- `schemas/stage_result.schema.json`
+- `schemas/validation_result.schema.json`
+- `schemas/imagemanager_decision.schema.json`
+- `schemas/client_question.schema.json`
+- `schemas/client_answer.schema.json`
+- `schemas/rework_request.schema.json`
+- `schemas/final_result.schema.json`
+
+n8n:
+
+- `n8n/test-fixtures/*.json`
+
+Tests and scripts:
+
+- `package.json`
+- `package-lock.json`
+- `scripts/validate-fixtures.js`
+- `tests/schema-validation.test.js`
+
+Docs:
+
+- `README.md`
+- `docs/BUILD_QUEUE.md`
+- `docs/BUILD_PLANS.md`
+
+### Implementation Steps
+
+1. Create contract, fixture, script, and test folders.
+2. Define readable v0.2.0 JSON schemas with required `schema_version` fields and bounded enum values where routing or status values matter.
+3. Add safe fake fixtures using project-relevant examples such as a blender on a kitchen worktop and a wall-mounted TV.
+4. Add an expected-invalid ImageManager decision fixture.
+5. Add a Node fixture validator that reports expected pass/fail outcomes clearly.
+6. Add Node test coverage for the fixture validation matrix.
+7. Update docs and queue status for the contract-first build.
+
+### Acceptance Criteria
+
+- [x] `npm install` works.
+- [x] `npm test` works.
+- [x] `npm run validate:fixtures` works.
+- [x] Valid fixtures pass validation.
+- [x] The intentionally invalid ImageManager decision fails validation as expected.
+- [x] No plugin feature code is added.
+- [x] No n8n workflow JSON is added.
+- [x] No provider calls are added.
+- [x] No secrets are committed.
+- [x] Documentation explains the contract-first approach.
+
+### Test Plan
+
+- [x] Run `npm install` to verify the Node package lock and local script setup.
+- [x] Run `npm test` to verify fixture validation expectations through the Node test runner.
+- [x] Run `npm run validate:fixtures` to validate fixtures directly and show readable pass/fail reporting.
+- [x] Inspect changed files for secrets and prohibited plugin/n8n workflow feature code.
+
+### Risks / Notes
+
+- The schemas are intentionally provider-neutral and focus on contracts rather than final internal implementation details.
+- Future builds may add stricter cross-file `$ref` relationships or workflow-specific schemas after the plugin and n8n handoff contracts are exercised in mock mode.
+- Fixture URLs use `https://example.invalid/...` and do not point to real client or provider assets.

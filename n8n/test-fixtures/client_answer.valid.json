@@ -1,0 +1,10 @@
+{
+  "schema_version": "0.2.0",
+  "answer_id": "ca_tv_picture_removal_001",
+  "question_id": "cq_tv_picture_removal_001",
+  "job_id": "job_lounge_tv_demo",
+  "answered_at": "2026-05-12T11:25:00Z",
+  "answer": "Keep the framed picture and move the TV slightly left so it still feels centred above the console.",
+  "selected_options": ["Keep the picture and move the TV"],
+  "asset_ids": []
+}

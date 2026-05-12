@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.2.0",
+  "submission_id": "sub_kitchen_blender_demo",
+  "submitted_at": "2026-05-12T10:00:00Z",
+  "client_reference": {
+    "external_user_ref": "demo-client-001",
+    "project_ref": "portfolio-kitchen-counter"
+  },
+  "brief": {
+    "scene_summary": "A bright kitchen with a pale stone worktop, white wall tiles, and a double socket near the back wall.",
+    "object_goal": "Add a compact black blender to the kitchen worktop.",
+    "placement_intent": "Place the blender on the right side of the worktop, below the socket but not blocking it.",
+    "instructions": "Make the blender look physically present, correctly scaled, and plugged into the nearby socket.",
+    "constraints": ["Do not cover the socket", "Keep existing mugs visible"],
+    "protected_elements": ["white tile wall", "wooden chopping board"]
+  },
+  "assets": [
+    {
+      "asset_id": "asset_scene_kitchen_001",
+      "declared_role": "scene_image",
+      "media_type": "image/jpeg",
+      "uri": "https://example.invalid/assets/kitchen-scene.jpg",
+      "description": "Fake demo scene image of the kitchen worktop."
+    },
+    {
+      "asset_id": "asset_object_blender_001",
+      "declared_role": "object_reference",
+      "media_type": "image/png",
+      "uri": "https://example.invalid/assets/black-blender.png",
+      "description": "Fake demo reference image of a compact blender."
+    }
+  ],
+  "metadata": {
+    "source": "fixture"
+  }
+}

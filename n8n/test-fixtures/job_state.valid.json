@@ -1,0 +1,57 @@
+{
+  "schema_version": "0.2.0",
+  "job_id": "job_kitchen_blender_demo",
+  "submission_id": "sub_kitchen_blender_demo",
+  "status": "planning",
+  "created_at": "2026-05-12T10:00:05Z",
+  "updated_at": "2026-05-12T10:04:00Z",
+  "current_stage": "placement_planning",
+  "brief": {
+    "scene_summary": "A bright kitchen with a pale stone worktop, white wall tiles, and a double socket near the back wall.",
+    "object_goal": "Add a compact black blender to the kitchen worktop.",
+    "placement_intent": "Place the blender on the right side of the worktop, below the socket but not blocking it.",
+    "instructions": "Make the blender look physically present, correctly scaled, and plugged into the nearby socket.",
+    "constraints": ["Do not cover the socket"],
+    "protected_elements": ["white tile wall"]
+  },
+  "assets": [
+    {
+      "asset_id": "asset_scene_kitchen_001",
+      "role": "scene_image",
+      "media_type": "image/jpeg",
+      "uri": "https://example.invalid/assets/kitchen-scene.jpg",
+      "description": "Fake demo scene image of the kitchen worktop."
+    },
+    {
+      "asset_id": "asset_object_blender_001",
+      "role": "object_reference",
+      "media_type": "image/png",
+      "uri": "https://example.invalid/assets/black-blender.png",
+      "description": "Fake demo reference image of a compact blender."
+    }
+  ],
+  "history": [
+    {
+      "event_id": "evt_submission_received_001",
+      "event_type": "submission_received",
+      "created_at": "2026-05-12T10:00:05Z",
+      "summary": "Demo kitchen blender submission received."
+    },
+    {
+      "event_id": "evt_stage_scene_001",
+      "event_type": "stage_completed",
+      "created_at": "2026-05-12T10:03:00Z",
+      "summary": "Scene analysis identified worktop plane and socket location.",
+      "related_id": "stage_scene_kitchen_001"
+    }
+  ],
+  "stage_result_ids": ["stage_scene_kitchen_001"],
+  "validation_ids": [],
+  "open_question_ids": [],
+  "loop_counts": {
+    "placement_planning": 0
+  },
+  "metadata": {
+    "fixture": true
+  }
+}

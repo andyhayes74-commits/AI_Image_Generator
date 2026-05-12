@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-image-generator/schemas/rework_request.schema.json",
+  "title": "Rework Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "rework_id", "job_id", "requested_at", "requested_by", "rework_type", "instructions"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.2.0" },
+    "rework_id": { "type": "string", "pattern": "^rw_[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "pattern": "^job_[A-Za-z0-9_-]+$" },
+    "requested_at": { "type": "string", "format": "date-time" },
+    "requested_by": { "type": "string", "enum": ["client", "admin", "validator"] },
+    "rework_type": { "type": "string", "enum": ["visual_polish", "placement_adjustment", "object_change", "lighting_adjustment", "functional_correction", "full_restart"] },
+    "instructions": { "type": "string", "minLength": 1, "maxLength": 4000 },
+    "preserve": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+    "target_version_id": { "type": "string", "pattern": "^ver_[A-Za-z0-9_-]+$" }
+  }
+}
