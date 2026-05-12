@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-image-generator.local/schemas/job_state.schema.json",
+  "title": "Job State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["job_id", "status", "client_inputs", "assets", "loop_counts", "validation_results", "generation_attempts", "questions", "rework_requests", "final_outputs", "created_at", "updated_at"],
+  "properties": {
+    "job_id": { "type": "string", "minLength": 1 },
+    "status": { "$ref": "#/$defs/jobStatus" },
+    "client_inputs": { "$ref": "client_submission.schema.json" },
+    "assets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "research": { "type": "object", "additionalProperties": true },
+    "scene_analysis": { "type": "object", "additionalProperties": true },
+    "object_analysis": { "type": "object", "additionalProperties": true },
+    "object_reconstruction_plan": { "type": "object", "additionalProperties": true },
+    "placement_plan": { "type": "object", "additionalProperties": true },
+    "scene_reengineering_plan": { "type": "object", "additionalProperties": true },
+    "functional_use_plan": { "type": "object", "additionalProperties": true },
+    "environmental_consequence_plan": { "type": "object", "additionalProperties": true },
+    "composition_blueprint": { "type": "object", "additionalProperties": true },
+    "loop_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["attempt", "max_attempts"],
+        "properties": {
+          "attempt": { "type": "integer", "minimum": 0 },
+          "max_attempts": { "type": "integer", "minimum": 1 },
+          "last_failure_reason": { "type": "string" }
+        }
+      }
+    },
+    "validation_results": {
+      "type": "array",
+      "items": { "$ref": "validation_result.schema.json" }
+    },
+    "generation_attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["attempt_id", "stage", "status", "created_at"],
+        "properties": {
+          "attempt_id": { "type": "string", "minLength": 1 },
+          "stage": { "type": "string", "enum": ["generating", "visual_rework"] },
+          "status": { "type": "string", "enum": ["mocked", "submitted", "succeeded", "failed"] },
+          "provider": { "type": "string" },
+          "output_asset_id": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "items": { "$ref": "client_question.schema.json" }
+    },
+    "rework_requests": {
+      "type": "array",
+      "items": { "$ref": "rework_request.schema.json" }
+    },
+    "final_outputs": {
+      "type": "array",
+      "items": { "$ref": "final_result.schema.json" }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "jobStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "intake_analysis",
+        "awaiting_client_answer",
+        "researching",
+        "scene_analysis",
+        "object_reconstruction",
+        "placement_planning",
+        "scene_reengineering",
+        "functional_validation",
+        "environmental_consequence",
+        "generating",
+        "validating",
+        "repairing",
+        "rework_requested",
+        "complete",
+        "failed",
+        "admin_review",
+        "cancelled"
+      ]
+    }
+  }
+}

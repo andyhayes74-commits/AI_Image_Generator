@@ -313,7 +313,7 @@ Draft fields:
 }
 ```
 
-A formal schema should be created before implementation.
+A formal schema now exists at `schemas/job_state.schema.json`. Future WordPress and n8n work should treat it as the contract source of truth unless a later build intentionally changes the schema and tests.
 
 ---
 
@@ -335,4 +335,4 @@ Recommended order:
 10. Image generation and final validation.
 11. Rework layer.
 
-No live provider calls should be required before mock mode and contract tests exist.
+No live provider calls should be required before mock mode and contract tests pass.

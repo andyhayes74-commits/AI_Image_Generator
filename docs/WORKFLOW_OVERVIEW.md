@@ -392,4 +392,11 @@ In mock mode:
 - Fixture JSON is used to simulate stage outputs.
 - Contract tests verify the workflow packets.
 
+The first contract fixtures live in `n8n/test-fixtures/` and validate against schemas in `schemas/` with:
+
+```sh
+npm run validate:fixtures
+npm test
+```
+
 Live provider integration should come later.

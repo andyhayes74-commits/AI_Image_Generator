@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-image-generator.local/schemas/final_result.schema.json",
+  "title": "Final Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["result_id", "job_id", "version", "status", "image", "validation", "created_at"],
+  "properties": {
+    "result_id": { "type": "string", "pattern": "^final-[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "minLength": 1 },
+    "version": { "type": "integer", "minimum": 1 },
+    "status": { "type": "string", "enum": ["approved", "rejected", "needs_rework"] },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["asset_id", "uri", "media_type"],
+      "properties": {
+        "asset_id": { "type": "string", "minLength": 1 },
+        "uri": { "type": "string", "minLength": 1 },
+        "media_type": { "type": "string", "enum": ["image/jpeg", "image/png", "image/webp"] },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "validation": { "$ref": "validation_result.schema.json" },
+    "generation_attempt_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

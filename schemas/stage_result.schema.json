@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-image-generator.local/schemas/stage_result.schema.json",
+  "title": "Stage Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["result_id", "job_id", "stage", "status", "summary", "outputs", "validation", "created_at"],
+  "properties": {
+    "result_id": { "type": "string", "pattern": "^stage-[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "minLength": 1 },
+    "stage": { "$ref": "#/$defs/stageName" },
+    "status": { "type": "string", "enum": ["passed", "failed", "needs_client", "needs_admin_review", "blocked"] },
+    "summary": { "type": "string", "minLength": 1 },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "validation": { "$ref": "validation_result.schema.json" },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence" },
+      "default": []
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "stageName": {
+      "type": "string",
+      "enum": [
+        "intake_analysis",
+        "researching",
+        "scene_analysis",
+        "object_reconstruction",
+        "placement_planning",
+        "scene_reengineering",
+        "functional_validation",
+        "environmental_consequence",
+        "composition_blueprint",
+        "generating",
+        "validating",
+        "visual_rework"
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_type", "summary"],
+      "properties": {
+        "source_type": { "type": "string", "enum": ["client_input", "asset", "research", "vision_analysis", "validated_inference", "mock_fixture"] },
+        "source_id": { "type": "string" },
+        "summary": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

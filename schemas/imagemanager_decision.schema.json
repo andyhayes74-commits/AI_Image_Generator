@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-image-generator.local/schemas/imagemanager_decision.schema.json",
+  "title": "ImageManager Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["decision_id", "job_id", "decision", "priority", "reason", "ask_client", "next_status", "created_at"],
+  "properties": {
+    "decision_id": { "type": "string", "pattern": "^im-[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "minLength": 1 },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "continue",
+        "retry_stage",
+        "repair_stage",
+        "rerun_research",
+        "ask_client",
+        "request_admin_review",
+        "approve_final",
+        "reject_final",
+        "start_targeted_rework"
+      ]
+    },
+    "target_stage": { "$ref": "#/$defs/stageName" },
+    "priority": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+    "reason": { "type": "string", "minLength": 1 },
+    "repair_instructions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "default": []
+    },
+    "ask_client": { "type": "boolean" },
+    "client_question": {
+      "oneOf": [
+        { "$ref": "client_question.schema.json" },
+        { "type": "null" }
+      ]
+    },
+    "reuse_previous_data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "research": { "type": "boolean" },
+        "scene_analysis": { "type": "boolean" },
+        "object_analysis": { "type": "boolean" },
+        "placement_plan": { "type": "boolean" },
+        "collision_validation": { "type": "boolean" },
+        "functional_use_validation": { "type": "boolean" },
+        "environmental_consequence_plan": { "type": "boolean" },
+        "composition_blueprint": { "type": "boolean" }
+      }
+    },
+    "final_validation_evidence": {
+      "type": "array",
+      "items": { "$ref": "validation_result.schema.json" },
+      "minItems": 1
+    },
+    "next_status": { "$ref": "#/$defs/jobStatus" },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "decision": { "const": "ask_client" } },
+        "required": ["decision"]
+      },
+      "then": {
+        "required": ["target_stage", "client_question"],
+        "properties": {
+          "ask_client": { "const": true },
+          "client_question": { "$ref": "client_question.schema.json" },
+          "next_status": { "const": "awaiting_client_answer" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "decision": { "enum": ["retry_stage", "repair_stage", "start_targeted_rework"] } },
+        "required": ["decision"]
+      },
+      "then": {
+        "required": ["target_stage", "repair_instructions"],
+        "properties": {
+          "repair_instructions": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "decision": { "const": "rerun_research" } },
+        "required": ["decision"]
+      },
+      "then": {
+        "required": ["target_stage"],
+        "properties": {
+          "target_stage": { "const": "researching" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "decision": { "const": "approve_final" } },
+        "required": ["decision"]
+      },
+      "then": {
+        "required": ["final_validation_evidence"],
+        "properties": {
+          "next_status": { "const": "complete" },
+          "final_validation_evidence": {
+            "type": "array",
+            "minItems": 1,
+            "contains": {
+              "type": "object",
+              "required": ["stage", "passed", "score"],
+              "properties": {
+                "stage": { "const": "final_validation" },
+                "passed": { "const": true },
+                "score": {
+                  "type": "number",
+                  "minimum": 0.8
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stageName": {
+      "type": "string",
+      "enum": [
+        "intake_analysis",
+        "client_question",
+        "researching",
+        "scene_analysis",
+        "object_reconstruction",
+        "placement_planning",
+        "scene_reengineering",
+        "functional_validation",
+        "environmental_consequence",
+        "composition_blueprint",
+        "generating",
+        "validating",
+        "visual_rework",
+        "final_validation",
+        "admin_review"
+      ]
+    },
+    "jobStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "intake_analysis",
+        "awaiting_client_answer",
+        "researching",
+        "scene_analysis",
+        "object_reconstruction",
+        "placement_planning",
+        "scene_reengineering",
+        "functional_validation",
+        "environmental_consequence",
+        "generating",
+        "validating",
+        "repairing",
+        "rework_requested",
+        "complete",
+        "failed",
+        "admin_review",
+        "cancelled"
+      ]
+    }
+  }
+}

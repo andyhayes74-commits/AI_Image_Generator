@@ -1,0 +1,161 @@
+{
+  "job_id": "img-job-0001",
+  "status": "complete",
+  "client_inputs": {
+    "submission_id": "sub-0001",
+    "job_id": "img-job-0001",
+    "submitted_at": "2026-05-12T18:00:00Z",
+    "source": "mock_fixture",
+    "client": {
+      "client_id": "client-001",
+      "display_name": "Mock Client",
+      "email": "client@example.test"
+    },
+    "client_brief": {
+      "summary": "Add a black blender to the kitchen worktop near the wall socket.",
+      "target_object": "black countertop blender",
+      "desired_scene_change": "Place the blender on the left side of the worktop and make it look plugged in.",
+      "constraints": ["Keep the kettle visible.", "Do not alter the window."],
+      "protected_elements": ["window", "kettle"]
+    },
+    "assets": [
+      {
+        "asset_id": "asset-scene-001",
+        "declared_role": "scene_image",
+        "media_type": "image/jpeg",
+        "uri": "mock://assets/kitchen-scene.jpg",
+        "client_label": "Kitchen photo"
+      },
+      {
+        "asset_id": "asset-object-001",
+        "declared_role": "object_reference",
+        "media_type": "image/png",
+        "uri": "mock://assets/blender-reference.png",
+        "client_label": "Blender reference"
+      }
+    ],
+    "requested_mode": "mock"
+  },
+  "assets": {
+    "asset-scene-001": {
+      "role": "scene_image",
+      "uri": "mock://assets/kitchen-scene.jpg"
+    },
+    "asset-object-001": {
+      "role": "object_reference",
+      "uri": "mock://assets/blender-reference.png"
+    }
+  },
+  "research": {
+    "summary": "Mock research estimates a countertop blender footprint."
+  },
+  "scene_analysis": {
+    "summary": "Kitchen worktop with visible wall socket."
+  },
+  "object_analysis": {
+    "summary": "Black countertop blender with rear power cable."
+  },
+  "object_reconstruction_plan": {},
+  "placement_plan": {
+    "summary": "Place blender on left side of worktop with cable routed to socket."
+  },
+  "scene_reengineering_plan": {},
+  "functional_use_plan": {
+    "summary": "Blender is plugged in and usable."
+  },
+  "environmental_consequence_plan": {
+    "summary": "Add contact shadow and mild reflection on worktop."
+  },
+  "composition_blueprint": {
+    "summary": "Validated mock blueprint for blender insertion."
+  },
+  "loop_counts": {
+    "intake_analysis": {
+      "attempt": 1,
+      "max_attempts": 3
+    },
+    "placement_planning": {
+      "attempt": 1,
+      "max_attempts": 3
+    }
+  },
+  "validation_results": [
+    {
+      "validation_id": "val-final-0001",
+      "job_id": "img-job-0001",
+      "stage": "final_validation",
+      "passed": true,
+      "score": 0.88,
+      "summary": "The final mock output matches the brief and blueprint.",
+      "issues": [],
+      "evidence": [
+        {
+          "source_type": "mock_fixture",
+          "source_id": "asset-final-001",
+          "summary": "Mock final image packet has passed validation.",
+          "confidence": 1
+        }
+      ],
+      "checked_at": "2026-05-12T18:19:00Z"
+    }
+  ],
+  "generation_attempts": [
+    {
+      "attempt_id": "gen-0001",
+      "stage": "generating",
+      "status": "mocked",
+      "provider": "mock",
+      "output_asset_id": "asset-final-001",
+      "created_at": "2026-05-12T18:18:00Z"
+    }
+  ],
+  "questions": [],
+  "rework_requests": [
+    {
+      "rework_id": "rw-0001",
+      "job_id": "img-job-0001",
+      "source": "client",
+      "requested_change": "Make the scene slightly brighter while keeping the blender where it is.",
+      "impact": "visual_polish",
+      "preserve": ["object identity", "placement", "scale", "perspective", "cable path"],
+      "created_at": "2026-05-12T18:20:00Z"
+    }
+  ],
+  "final_outputs": [
+    {
+      "result_id": "final-0001",
+      "job_id": "img-job-0001",
+      "version": 1,
+      "status": "approved",
+      "image": {
+        "asset_id": "asset-final-001",
+        "uri": "mock://outputs/img-job-0001/final-v1.webp",
+        "media_type": "image/webp",
+        "width": 1600,
+        "height": 1200
+      },
+      "validation": {
+        "validation_id": "val-final-0001",
+        "job_id": "img-job-0001",
+        "stage": "final_validation",
+        "passed": true,
+        "score": 0.88,
+        "summary": "The final mock output matches the brief and blueprint.",
+        "issues": [],
+        "evidence": [
+          {
+            "source_type": "mock_fixture",
+            "source_id": "asset-final-001",
+            "summary": "Mock final image packet has passed validation.",
+            "confidence": 1
+          }
+        ],
+        "checked_at": "2026-05-12T18:19:00Z"
+      },
+      "generation_attempt_id": "gen-0001",
+      "created_at": "2026-05-12T18:19:30Z"
+    }
+  ],
+  "created_at": "2026-05-12T18:00:00Z",
+  "updated_at": "2026-05-12T18:20:00Z"
+}

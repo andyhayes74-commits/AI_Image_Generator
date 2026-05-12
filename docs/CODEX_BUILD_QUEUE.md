@@ -87,7 +87,7 @@ Acceptance criteria:
 - Codex build queue exists.
 - No product code added.
 
-Status: `In Progress`
+Status: `Done`
 
 ---
 
@@ -116,7 +116,7 @@ Acceptance criteria:
 - README/docs reference schema purpose.
 - No live integrations added.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -138,7 +138,7 @@ Acceptance criteria:
 - Invalid fixture examples fail as expected.
 - Test command documented.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -164,7 +164,7 @@ Acceptance criteria:
 - PHP lint passes where available.
 - Settings page loads.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -191,7 +191,7 @@ Acceptance criteria:
 - Job status is stored.
 - Contract fixture matches `client_submission.schema.json`.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -213,7 +213,7 @@ Acceptance criteria:
 - Workflow has mock-mode branch.
 - No credentials included.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -236,7 +236,7 @@ Acceptance criteria:
 - Client answer validates against schema.
 - Workflow can resume with answer attached to job state.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -260,7 +260,7 @@ Acceptance criteria:
 - n8n routes based on decision output.
 - Max loop rules exist.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -283,7 +283,7 @@ Acceptance criteria:
 - Stage output validates as `stage_result`.
 - ImageManager can decide continue or ask client based on fixture.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -306,7 +306,7 @@ Acceptance criteria:
 - Rework layer can skip research when safe.
 - No live Perplexity call yet unless explicitly planned.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -323,7 +323,7 @@ Acceptance criteria:
 - TV-on lighting failure routes to environmental consequence repair.
 - Blender worktop collision routes to scene reengineering.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -340,7 +340,7 @@ Acceptance criteria:
 - Failed validation produces targeted repair.
 - Final result packet returns to WordPress.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -357,7 +357,7 @@ Acceptance criteria:
 - Object-change rework reruns object analysis/research as needed.
 - Version history is preserved.
 
-Status: `Todo`
+Status: `Done`
 
 ---
 
@@ -380,12 +380,12 @@ Acceptance criteria:
 - No secrets committed.
 - Provider outputs are converted into existing schemas.
 
-Status: `Todo`
+Status: `Deferred`
 
 ---
 
 ## First Build Recommendation
 
-The immediate next Codex build should complete TASK-0001 if not already complete, then move to TASK-0002.
+The immediate next Codex build should productionise the MVP in a real WordPress/n8n environment and connect one live provider at a time behind the existing schemas.
 
-Do not start plugin or n8n implementation until schemas and fixture validation exist.
+Keep mock mode and schema fixture validation available while adding live integrations.

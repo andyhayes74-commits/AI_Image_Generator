@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-image-generator.local/schemas/rework_request.schema.json",
+  "title": "Rework Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["rework_id", "job_id", "source", "requested_change", "impact", "created_at"],
+  "properties": {
+    "rework_id": { "type": "string", "pattern": "^rw-[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "minLength": 1 },
+    "source": { "type": "string", "enum": ["client", "admin"] },
+    "requested_change": { "type": "string", "minLength": 1 },
+    "impact": { "type": "string", "enum": ["visual_polish", "placement_change", "object_change", "function_change", "unknown"] },
+    "preserve": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "default": []
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

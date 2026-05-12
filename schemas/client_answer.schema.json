@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-image-generator.local/schemas/client_answer.schema.json",
+  "title": "Client Answer",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["answer_id", "question_id", "job_id", "answer", "answered_at"],
+  "properties": {
+    "answer_id": { "type": "string", "pattern": "^a-[A-Za-z0-9_-]+$" },
+    "question_id": { "type": "string", "pattern": "^q-[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "minLength": 1 },
+    "answer": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        }
+      ]
+    },
+    "uploaded_asset_ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "answered_at": { "type": "string", "format": "date-time" }
+  }
+}

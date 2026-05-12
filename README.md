@@ -23,11 +23,11 @@ The image model should not freestyle the answer. n8n should build a validated co
 
 ## Current Version
 
-Current version: `v0.1.0-planning`
+Current version: `v1.0.0`
 
-Status: `Planning / documentation foundation`
+Status: `Stable mock-first MVP`
 
-This repository currently contains the project documentation framework only. Product feature code and live n8n workflow JSON have not been started yet.
+This repository currently contains a stable mock-first MVP: documentation, schemas, fixtures, a WordPress intake shell, an n8n mock workflow export, ImageManager prompts, a local workflow simulator, contract tests, and smoke-test tooling. Live provider integrations have not been connected yet.
 
 ---
 
@@ -127,14 +127,17 @@ AI_Image_Generator/
 Future Codex-friendly folders may include:
 
 ```text
-schemas/                    # JSON schemas for job state and workflow contracts
-tests/                      # Schema, fixture, plugin, and workflow-simulator tests
-scripts/                    # Validation scripts and mock workflow checks
 n8n/prompts/                # ImageManager and worker prompts
-n8n/test-fixtures/          # Safe fake input/output packets
 ```
 
-These folders should be added by a planned build, not as accidental placeholders.
+The v0.2.0 contract build intentionally added:
+
+```text
+schemas/                    # JSON schemas for job state and workflow contracts
+tests/                      # Schema and fixture validation tests
+scripts/                    # Validation scripts
+n8n/test-fixtures/          # Safe fake input/output packets
+```
 
 ---
 
@@ -183,6 +186,36 @@ See `docs/IMAGE_MANAGER.md` for the draft design.
 
 ---
 
+## Contract Foundation
+
+The v0.2.0 build defines the current contract source of truth in `schemas/`.
+
+The validation script checks safe mock fixtures in `n8n/test-fixtures/` against those schemas:
+
+```sh
+npm run validate:fixtures
+npm test
+```
+
+Fixture names ending in `.valid.json` must pass. Fixture names ending in `.invalid.json` must fail for the expected contract reason.
+
+---
+
+## MVP Verification
+
+Run the local verification suite:
+
+```sh
+npm run validate:fixtures
+npm run validate:workflow
+npm test
+npm run smoke
+```
+
+See `docs/SMOKE_TEST.md`, `docs/KNOWN_LIMITATIONS.md`, and `docs/SECURITY_REVIEW.md` for release notes.
+
+---
+
 ## Documentation Index
 
 - `docs/ARCHITECTURE.md` — draft architecture and core layers.
@@ -213,12 +246,15 @@ See `docs/IMAGE_MANAGER.md` for the draft design.
 
 ## Current Build Focus
 
-The next practical build should be documentation and contract alignment:
+The v0.1.0 foundation locked the project objective, architecture, workflow map, ImageManager direction, repo rules, and build queue.
 
-1. Lock the architecture.
-2. Define the job state and workflow contracts.
-3. Create schemas and safe fixtures.
-4. Build a mockable WordPress-to-n8n loop.
-5. Add the ImageManager only after routing and contracts exist.
+The roadmap through v1.0.0 is complete for the mock-first MVP.
 
-No live AI provider calls should be required until mock mode and contract tests are working.
+The next practical build should focus on productionising the MVP:
+
+1. Run the WordPress plugin in a real PHP/WordPress environment.
+2. Import and test the n8n workflow in n8n.
+3. Add provider adapters behind the existing schemas.
+4. Keep mock mode available for regression tests.
+
+No production credentials should be committed to the repository.

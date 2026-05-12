@@ -1,0 +1,17 @@
+{
+  "name": "ai-image-generator-contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Contract schemas and fixture validation for the AI Image Generator workflow.",
+  "type": "module",
+  "scripts": {
+    "validate:fixtures": "node scripts/validate-fixtures.js",
+    "validate:workflow": "node scripts/validate-workflow-json.js",
+    "smoke": "node scripts/run-smoke-test.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}

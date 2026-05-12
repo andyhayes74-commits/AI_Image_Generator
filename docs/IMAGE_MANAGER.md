@@ -132,7 +132,7 @@ No other decision names should be accepted.
 }
 ```
 
-A formal JSON schema should be created before implementation.
+The formal decision contract now lives in `schemas/imagemanager_decision.schema.json`.
 
 ---
 
@@ -380,4 +380,4 @@ Suggested tests:
 - `approve_final` fails when validation scores are below threshold.
 - Visual-only rework skips research and placement.
 
-The ImageManager is only useful if its decisions are predictable enough for n8n to route safely.
+The ImageManager is only useful if its decisions are predictable enough for n8n to route safely. Use `npm run validate:fixtures` to check the current valid and invalid decision fixtures before adding routing logic.

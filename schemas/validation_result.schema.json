@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-image-generator.local/schemas/validation_result.schema.json",
+  "title": "Validation Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["validation_id", "job_id", "stage", "passed", "score", "issues", "checked_at"],
+  "properties": {
+    "validation_id": { "type": "string", "pattern": "^val-[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "minLength": 1 },
+    "stage": { "$ref": "#/$defs/stageName" },
+    "passed": { "type": "boolean" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "summary": { "type": "string" },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["severity", "message"],
+        "properties": {
+          "severity": { "type": "string", "enum": ["info", "low", "medium", "high", "critical"] },
+          "message": { "type": "string", "minLength": 1 },
+          "repair_instruction": { "type": "string" }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence" },
+      "default": []
+    },
+    "checked_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "stageName": {
+      "type": "string",
+      "enum": [
+        "intake_analysis",
+        "researching",
+        "scene_analysis",
+        "object_reconstruction",
+        "placement_planning",
+        "scene_reengineering",
+        "functional_validation",
+        "environmental_consequence",
+        "composition_blueprint",
+        "generating",
+        "validating",
+        "visual_rework",
+        "final_validation"
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_type", "summary"],
+      "properties": {
+        "source_type": { "type": "string", "enum": ["client_input", "asset", "research", "vision_analysis", "validated_inference", "mock_fixture"] },
+        "source_id": { "type": "string" },
+        "summary": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

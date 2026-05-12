@@ -1,0 +1,18 @@
+{
+  "validation_id": "val-0001",
+  "job_id": "img-job-0001",
+  "stage": "intake_analysis",
+  "passed": true,
+  "score": 0.92,
+  "summary": "The submission includes a scene image, an object reference, and placement intent.",
+  "issues": [],
+  "evidence": [
+    {
+      "source_type": "mock_fixture",
+      "source_id": "sub-0001",
+      "summary": "Fixture contains the minimum required intake assets.",
+      "confidence": 1
+    }
+  ],
+  "checked_at": "2026-05-12T18:01:00Z"
+}

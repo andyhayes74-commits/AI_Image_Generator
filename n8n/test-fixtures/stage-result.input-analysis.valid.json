@@ -1,0 +1,54 @@
+{
+  "result_id": "stage-input-0001",
+  "job_id": "img-job-0001",
+  "stage": "intake_analysis",
+  "status": "passed",
+  "summary": "Input analysis found one scene image, one object reference, and one placement sketch.",
+  "outputs": {
+    "classified_assets": [
+      {
+        "asset_id": "asset-scene-001",
+        "detected_role": "scene_image",
+        "quality": "usable"
+      },
+      {
+        "asset_id": "asset-object-001",
+        "detected_role": "object_reference",
+        "quality": "usable"
+      },
+      {
+        "asset_id": "asset-placement-001",
+        "detected_role": "placement_sketch",
+        "quality": "usable"
+      }
+    ],
+    "needs_client_clarification": false
+  },
+  "validation": {
+    "validation_id": "val-0001",
+    "job_id": "img-job-0001",
+    "stage": "intake_analysis",
+    "passed": true,
+    "score": 0.92,
+    "summary": "The submission includes a scene image, an object reference, and placement intent.",
+    "issues": [],
+    "evidence": [
+      {
+        "source_type": "mock_fixture",
+        "source_id": "sub-0001",
+        "summary": "Fixture contains the minimum required intake assets.",
+        "confidence": 1
+      }
+    ],
+    "checked_at": "2026-05-12T18:01:00Z"
+  },
+  "evidence": [
+    {
+      "source_type": "client_input",
+      "source_id": "sub-0001",
+      "summary": "Client supplied labelled images and a placement sketch.",
+      "confidence": 0.9
+    }
+  ],
+  "created_at": "2026-05-12T18:01:10Z"
+}

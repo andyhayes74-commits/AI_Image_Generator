@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-image-generator.local/schemas/client_question.schema.json",
+  "title": "Client Question",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["question_id", "job_id", "stage", "question", "answer_type", "required", "created_at"],
+  "properties": {
+    "question_id": { "type": "string", "pattern": "^q-[A-Za-z0-9_-]+$" },
+    "job_id": { "type": "string", "minLength": 1 },
+    "stage": { "$ref": "#/$defs/stageName" },
+    "question": { "type": "string", "minLength": 1 },
+    "help_text": { "type": ["string", "null"] },
+    "answer_type": {
+      "type": "string",
+      "enum": ["free_text", "single_choice", "multi_choice", "file_upload", "yes_no"]
+    },
+    "options": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "required": { "type": "boolean" },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "answer_type": { "enum": ["single_choice", "multi_choice"] } },
+        "required": ["answer_type"]
+      },
+      "then": { "required": ["options"] }
+    }
+  ],
+  "$defs": {
+    "stageName": {
+      "type": "string",
+      "enum": [
+        "intake_analysis",
+        "client_question",
+        "researching",
+        "scene_analysis",
+        "object_reconstruction",
+        "placement_planning",
+        "scene_reengineering",
+        "functional_validation",
+        "environmental_consequence",
+        "composition_blueprint",
+        "generating",
+        "validating",
+        "visual_rework",
+        "admin_review"
+      ]
+    }
+  }
+}

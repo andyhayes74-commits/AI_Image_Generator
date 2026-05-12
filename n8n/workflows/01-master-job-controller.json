@@ -1,0 +1,119 @@
+{
+  "name": "AI Image Generator - Master Job Controller Mock",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "ai-image-generator/jobs",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-client-submission",
+      "name": "Client Submission Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "aiig-mock-client-submission"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: { ...$json, status: 'intake_analysis', mock_mode: true } };"
+      },
+      "id": "mock-input-analysis",
+      "name": "Mock Input Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: { ...$json, status: 'researching', research: { provider: 'mock', confidence: 0.82 } } };"
+      },
+      "id": "mock-research-planning",
+      "name": "Mock Research and Planning",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 0]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: { ...$json, status: 'complete', final_result: { result_id: 'final-mock', job_id: $json.job_id, version: 1, status: 'approved' } } };"
+      },
+      "id": "mock-generation-validation",
+      "name": "Mock Generation and Validation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "respond-final-result",
+      "name": "Respond Final Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [960, 0]
+    }
+  ],
+  "connections": {
+    "Client Submission Webhook": {
+      "main": [
+        [
+          {
+            "node": "Mock Input Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Input Analysis": {
+      "main": [
+        [
+          {
+            "node": "Mock Research and Planning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Research and Planning": {
+      "main": [
+        [
+          {
+            "node": "Mock Generation and Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Generation and Validation": {
+      "main": [
+        [
+          {
+            "node": "Respond Final Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "aiig-v0-4-0-mock",
+  "triggerCount": 1,
+  "tags": ["ai-image-generator", "mock"]
+}

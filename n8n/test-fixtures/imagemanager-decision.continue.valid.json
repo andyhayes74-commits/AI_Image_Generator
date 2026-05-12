@@ -1,0 +1,13 @@
+{
+  "decision_id": "im-0001",
+  "job_id": "img-job-0001",
+  "decision": "continue",
+  "target_stage": "researching",
+  "priority": "low",
+  "reason": "Input analysis passed and the next normal stage is research.",
+  "repair_instructions": [],
+  "ask_client": false,
+  "client_question": null,
+  "next_status": "researching",
+  "created_at": "2026-05-12T18:01:30Z"
+}

@@ -1,0 +1,9 @@
+{
+  "rework_id": "rw-0001",
+  "job_id": "img-job-0001",
+  "source": "client",
+  "requested_change": "Make the scene slightly brighter while keeping the blender where it is.",
+  "impact": "visual_polish",
+  "preserve": ["object identity", "placement", "scale", "perspective", "cable path"],
+  "created_at": "2026-05-12T18:20:00Z"
+}

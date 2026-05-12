@@ -1,0 +1,13 @@
+{
+  "decision_id": "im-bad-0001",
+  "job_id": "img-job-0001",
+  "decision": "freestyle_generate",
+  "target_stage": "generating",
+  "priority": "high",
+  "reason": "This fixture should fail because ImageManager cannot invent decision names.",
+  "repair_instructions": [],
+  "ask_client": false,
+  "client_question": null,
+  "next_status": "generating",
+  "created_at": "2026-05-12T18:03:00Z"
+}
