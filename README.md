@@ -45,6 +45,7 @@ The system should:
 - Allow n8n to ask the client clarifying questions through the WordPress plugin.
 - Support targeted rework without restarting the whole job when the requested change is small.
 - Return final approved image versions to WordPress for review, display, and download.
+- Keep future n8n workflow exports deployable through a validated, sanitised, manual GitHub Actions deployment path.
 
 ---
 
@@ -81,6 +82,10 @@ Small rework requests, such as “make the scene brighter”, should reuse valid
 ### 8. Codex-buildable delivery
 
 The repo should be structured so Codex can build one tested slice at a time: contracts first, mock mode first, tests after each slice, then live integrations.
+
+### 9. Deployable n8n workflow source
+
+n8n workflow JSON should be treated as source-controlled deployment artifacts. Future workflow builds must keep exports deploy-safe, credential-clean, validated, and compatible with a manual GitHub Actions deployment path.
 
 ---
 
@@ -129,9 +134,11 @@ Future Codex-friendly folders may include:
 ```text
 schemas/                    # JSON schemas for job state and workflow contracts
 tests/                      # Schema, fixture, plugin, and workflow-simulator tests
-scripts/                    # Validation scripts and mock workflow checks
+scripts/                    # Validation, mock workflow checks, and future deployment scripts
 n8n/prompts/                # ImageManager and worker prompts
 n8n/test-fixtures/          # Safe fake input/output packets
+n8n/deploy/                 # Future safe deployment mapping examples
+.github/workflows/          # Future manual GitHub Actions for controlled deployment
 ```
 
 These folders should be added by a planned build, not as accidental placeholders.
@@ -156,6 +163,25 @@ The full system is expected to grow into 12 workflow areas:
 12. Final Validation / QA Workflow
 
 The MVP should start with fewer workflows and split them later as the system proves itself.
+
+---
+
+## n8n Deployment Direction
+
+Future n8n workflow development should allow this deployment path:
+
+```text
+Edit workflow JSON in GitHub
+→ Validate workflow export
+→ Sanitise deployment payload
+→ Deploy to self-hosted n8n through n8n API
+→ Preserve existing active state unless explicitly changed
+→ Report success/failure in GitHub Actions
+```
+
+This deployment path is not active yet. It should be added only after schemas, fixtures, workflow validation, and n8n skeleton workflows exist.
+
+See `docs/N8N_DEPLOYMENT.md` for the future deployment plan.
 
 ---
 
@@ -188,6 +214,7 @@ See `docs/IMAGE_MANAGER.md` for the draft design.
 - `docs/ARCHITECTURE.md` — draft architecture and core layers.
 - `docs/WORKFLOW_OVERVIEW.md` — planned workflow map.
 - `docs/IMAGE_MANAGER.md` — ImageManager design.
+- `docs/N8N_DEPLOYMENT.md` — future n8n deployment and GitHub Actions plan.
 - `docs/CODEX_BUILD_QUEUE.md` — Codex-oriented build path.
 - `docs/ROADMAP.md` — version roadmap.
 - `docs/BUILD_QUEUE.md` — active task queue.
@@ -203,7 +230,7 @@ See `docs/IMAGE_MANAGER.md` for the draft design.
 - Keep changes small and reviewable.
 - Do not rewrite unrelated systems.
 - Do not remove existing features unless explicitly instructed.
-- Update documentation when behaviour, structure, or workflow contracts change.
+- Update documentation when behaviour, structure, workflow contracts, or deployment expectations change.
 - Record bugs in `docs/BUGS.md`.
 - Track active work in `docs/BUILD_QUEUE.md`.
 - Use `docs/BUILD_PLANS.md` before starting a new version or major feature.
@@ -220,5 +247,6 @@ The next practical build should be documentation and contract alignment:
 3. Create schemas and safe fixtures.
 4. Build a mockable WordPress-to-n8n loop.
 5. Add the ImageManager only after routing and contracts exist.
+6. Keep future n8n workflow exports compatible with validation and controlled deployment.
 
-No live AI provider calls should be required until mock mode and contract tests are working.
+No live AI provider calls or live n8n deployment should be required until mock mode and contract tests are working.
