@@ -17,6 +17,7 @@ The system should be built:
 - Loop-safe.
 - Schema-validated.
 - Documentation-updated after every behavioural change.
+- Deployment-aware for n8n workflow exports.
 
 Codex should not attempt to build the full system in one giant pass.
 
@@ -30,9 +31,11 @@ Codex should not attempt to build the full system in one giant pass.
 - Do not change schemas without updating docs and tests.
 - Do not mix unrelated work into a task.
 - Do not start image generation before the WordPress-to-n8n contract is stable.
+- Do not add live n8n deployment before workflow validation, dry-run support, and a deployment build plan exist.
 - Run available tests after each slice.
 - Fix failing tests before expanding scope.
 - Update `docs/BUILD_QUEUE.md` and `docs/BUILD_PLANS.md` as work progresses.
+- Follow `docs/N8N_DEPLOYMENT.md` when creating workflow exports, workflow validators, deployment scripts, or GitHub Actions.
 
 ---
 
@@ -43,9 +46,11 @@ These folders should be added by a planned build when needed:
 ```text
 schemas/                    # JSON schemas for workflow contracts
 tests/                      # Contract, fixture, plugin, and workflow tests
-scripts/                    # Validation scripts and workflow simulators
+scripts/                    # Validation scripts, workflow simulators, and future deploy helpers
 n8n/prompts/                # ImageManager and specialist worker prompts
 n8n/test-fixtures/          # Safe fake packets for mock mode
+n8n/deploy/                 # Future safe deployment mapping examples
+.github/workflows/          # Future manual GitHub Actions, including n8n deployment
 ```
 
 Do not add empty placeholder folders unless the build plan explicitly says to.
@@ -70,6 +75,34 @@ schemas/final_result.schema.json
 
 ---
 
+## n8n Deployment Requirements For Future Builds
+
+Future n8n workflow builds must keep deployment in mind from the first workflow export.
+
+Workflow export work should ensure:
+
+- JSON files live in `n8n/workflows/`.
+- Workflow exports contain no real credentials or secrets.
+- Workflow exports are valid JSON.
+- Workflow exports are designed to be validated before deployment.
+- Runtime/read-only fields are stripped or ignored before update calls.
+- Workflow IDs are resolved through GitHub secrets or environment variables, not committed mappings.
+- Deployment remains manual and dry-run capable until production use is explicitly approved.
+
+Future deployment work may add:
+
+```text
+.github/workflows/deploy-n8n.yml
+scripts/validate-n8n-workflows.js
+scripts/deploy-n8n-workflow.mjs
+n8n/deploy/workflow-map.example.json
+n8n/deploy/README.md
+```
+
+These files should only be added by a dedicated deployment build plan. See `docs/N8N_DEPLOYMENT.md`.
+
+---
+
 ## Codex Task List
 
 ### TASK-0001 — Lock documentation architecture
@@ -85,6 +118,7 @@ Acceptance criteria:
 - Workflow overview exists.
 - ImageManager design exists.
 - Codex build queue exists.
+- n8n deployment plan exists.
 - No product code added.
 
 Status: `In Progress`
@@ -212,12 +246,35 @@ Acceptance criteria:
 - Webhook input shape matches schema.
 - Workflow has mock-mode branch.
 - No credentials included.
+- Export follows `docs/N8N_DEPLOYMENT.md` deploy-safe rules.
 
 Status: `Todo`
 
 ---
 
-### TASK-0007 — Build client question/resume loop
+### TASK-0007 — Add n8n workflow validation
+
+Goal:
+
+- Add validation checks for committed n8n workflow JSON before deployment exists.
+
+Expected files:
+
+- `scripts/validate-n8n-workflows.js` or equivalent.
+- Test fixtures or docs for valid/invalid workflow exports.
+
+Acceptance criteria:
+
+- Workflow JSON files are valid JSON.
+- Required workflow fields are checked.
+- Known read-only/runtime fields are reported or stripped in dry-run validation.
+- No credentials/secrets are detected in committed exports.
+
+Status: `Todo`
+
+---
+
+### TASK-0008 — Build client question/resume loop
 
 Goal:
 
@@ -240,7 +297,7 @@ Status: `Todo`
 
 ---
 
-### TASK-0008 — Build ImageManager MVP
+### TASK-0009 — Build ImageManager MVP
 
 Goal:
 
@@ -264,7 +321,7 @@ Status: `Todo`
 
 ---
 
-### TASK-0009 — Build input file analysis mock workflow
+### TASK-0010 — Build input file analysis mock workflow
 
 Goal:
 
@@ -287,7 +344,7 @@ Status: `Todo`
 
 ---
 
-### TASK-0010 — Build research mock workflow
+### TASK-0011 — Build research mock workflow
 
 Goal:
 
@@ -310,7 +367,7 @@ Status: `Todo`
 
 ---
 
-### TASK-0011 — Build planning and validation mocks
+### TASK-0012 — Build planning and validation mocks
 
 Goal:
 
@@ -327,7 +384,7 @@ Status: `Todo`
 
 ---
 
-### TASK-0012 — Build first image generation mock loop
+### TASK-0013 — Build first image generation mock loop
 
 Goal:
 
@@ -344,7 +401,7 @@ Status: `Todo`
 
 ---
 
-### TASK-0013 — Build targeted rework layer
+### TASK-0014 — Build targeted rework layer
 
 Goal:
 
@@ -361,7 +418,33 @@ Status: `Todo`
 
 ---
 
-### TASK-0014 — Add live provider integrations
+### TASK-0015 — Add manual n8n deployment action
+
+Goal:
+
+- Add controlled GitHub Actions deployment for n8n workflows after workflow validation is proven.
+
+Expected files:
+
+- `.github/workflows/deploy-n8n.yml`
+- `scripts/deploy-n8n-workflow.mjs`
+- `n8n/deploy/workflow-map.example.json`
+- `n8n/deploy/README.md`
+
+Acceptance criteria:
+
+- Manual `workflow_dispatch` only.
+- Dry-run mode exists and is default.
+- Required secrets are documented but not committed.
+- Active state is preserved by default.
+- Read-only/runtime fields are removed from update payloads.
+- Deployment logs redact secrets.
+
+Status: `Todo`
+
+---
+
+### TASK-0016 — Add live provider integrations
 
 Goal:
 
@@ -388,4 +471,4 @@ Status: `Todo`
 
 The immediate next Codex build should complete TASK-0001 if not already complete, then move to TASK-0002.
 
-Do not start plugin or n8n implementation until schemas and fixture validation exist.
+Do not start plugin, n8n implementation, live deployment, or provider integration until schemas and fixture validation exist.
