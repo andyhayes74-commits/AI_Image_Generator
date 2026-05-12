@@ -3,7 +3,7 @@
 Status: `Draft`
 Purpose: Documentation-only master outline for the full project build.
 
-This document is a planning reference, not an implementation artifact. It does not create product code, workflow JSON, schemas, fixtures, prompts, or executable tests.
+This document is a planning reference, not an implementation artifact. It does not create product code, workflow JSON, schemas, fixtures, prompts, executable tests, or deployment actions.
 
 ---
 
@@ -40,6 +40,7 @@ The complete system should support the following objectives:
 - **Client question loop**: pause when the workflow would otherwise guess and ask the client for clarifying information.
 - **Targeted rework layer**: handle post-result change requests by rerunning the smallest safe part of the workflow while preserving validated data and previous versions.
 - **Final image return to WordPress**: deliver final image versions, status, metadata, and review/rework options back to the WordPress layer.
+- **Deployable n8n workflow source**: keep future workflow exports compatible with validation, sanitisation, and controlled GitHub Actions deployment to self-hosted n8n.
 
 ---
 
@@ -59,6 +60,7 @@ The complete system should support the following objectives:
 │   ├── CODEX_BUILD_QUEUE.md
 │   ├── IMAGE_MANAGER.md
 │   ├── MASTER_BUILD_OUTLINE.md
+│   ├── N8N_DEPLOYMENT.md
 │   ├── ROADMAP.md
 │   └── WORKFLOW_OVERVIEW.md
 ├── n8n/
@@ -70,10 +72,10 @@ The complete system should support the following objectives:
 Current repository areas:
 
 - `plugin/` — planned WordPress plugin source area.
-- `n8n/` — planned n8n workflow exports, notes, prompts, fixtures, and workflow documentation area.
+- `n8n/` — planned n8n workflow exports, notes, prompts, fixtures, deployment mapping, and workflow documentation area.
 - `n8n/workflows/` — planned location for exported workflow JSON once an approved build creates workflows.
 - `n8n/notes/` — workflow notes and contracts.
-- `docs/` — project control room for architecture, build plans, roadmap, queues, and design decisions.
+- `docs/` — project control room for architecture, build plans, roadmap, queues, deployment expectations, and design decisions.
 
 ### Future Folders To Add Later
 
@@ -82,9 +84,11 @@ The following folders are expected later, but should only be added by planned im
 ```text
 schemas/                 # Future JSON schemas for contracts and validation.
 tests/                   # Future automated test suite.
-scripts/                 # Future validation/import/smoke-test helpers.
+scripts/                 # Future validation/import/smoke-test/deployment helpers.
 n8n/prompts/             # Future approved prompt assets for n8n stages.
 n8n/test-fixtures/       # Future safe fake n8n payloads and workflow fixtures.
+n8n/deploy/              # Future safe deployment mapping examples.
+.github/workflows/       # Future manual GitHub Actions, including n8n deployment.
 plugin/tests/            # Future plugin-specific tests if needed.
 ```
 
@@ -155,13 +159,34 @@ Formal schemas should be introduced before plugin or n8n feature implementation.
 
 ---
 
-## 6. Build Phases
+## 6. n8n Deployment Direction
+
+Future n8n workflow development should be compatible with controlled deployment from GitHub.
+
+Target future path:
+
+```text
+Edit workflow JSON in GitHub
+→ Validate workflow export
+→ Sanitise deployment payload
+→ Deploy to self-hosted n8n through n8n API
+→ Preserve existing active state unless explicitly changed
+→ Report success/failure in GitHub Actions
+```
+
+Deployment is not active yet. It should only be implemented after workflow JSON, validation, dry-run handling, and GitHub secrets are ready.
+
+Future deployment support should follow `docs/N8N_DEPLOYMENT.md`.
+
+---
+
+## 7. Build Phases
 
 ### Phase 0: Docs and Architecture Lock
 
 - Lock repository purpose and folder boundaries.
-- Maintain architecture, workflow, ImageManager, roadmap, build queue, and master outline docs.
-- Confirm no product code, schemas, workflow JSON, or provider calls are introduced accidentally.
+- Maintain architecture, workflow, ImageManager, roadmap, build queue, deployment plan, and master outline docs.
+- Confirm no product code, schemas, workflow JSON, deployment actions, or provider calls are introduced accidentally.
 
 ### Phase 1: Schemas and Fixtures
 
@@ -181,6 +206,7 @@ Formal schemas should be introduced before plugin or n8n feature implementation.
 - Create importable n8n workflow skeletons once planned.
 - Use mock mode and fixtures before live provider calls.
 - Prove job receipt, state creation, stage routing, validation envelope handling, and return-to-WordPress flow.
+- Ensure workflow exports are deploy-safe and compatible with future validation/deployment scripts.
 
 ### Phase 4: Client Question Loop
 
@@ -218,7 +244,16 @@ Formal schemas should be introduced before plugin or n8n feature implementation.
 - Rerun only the smallest safe stage subset.
 - Keep previous versions available for comparison and rollback.
 
-### Phase 10: Live Provider Integrations and Hardening
+### Phase 10: Manual n8n Deployment Action
+
+- Add controlled GitHub Actions deployment for n8n workflows after workflow validation is proven.
+- Start with `workflow_dispatch` only.
+- Make dry-run mode the default.
+- Use GitHub secrets for n8n base URL, API key, and target workflow IDs.
+- Preserve active state by default.
+- Strip or ignore read-only/runtime fields before update calls.
+
+### Phase 11: Live Provider Integrations and Hardening
 
 - Harden provider credential handling, rate limits, cost controls, retry policies, logging, and monitoring.
 - Add production-safe storage, status, admin approval, and delivery behaviour.
@@ -226,26 +261,29 @@ Formal schemas should be introduced before plugin or n8n feature implementation.
 
 ---
 
-## 7. Testing Strategy
+## 8. Testing Strategy
 
 The project should become testable in layers before live providers are used:
 
 - **Schema validation**: validate every core contract and reject malformed packets before routing.
 - **Fixture validation**: run safe fake payloads through schemas and expected decision paths.
 - **Plugin smoke tests**: check plugin activation, admin page loading, permissions, nonces, upload handling, sanitisation, and contract-shaped outbound payloads.
+- **n8n workflow validation**: confirm workflow exports are valid JSON, contain required fields, avoid credentials/secrets, and are deploy-safe.
 - **n8n import validation**: confirm workflow exports can be imported without credentials or production secrets.
 - **Mock-mode workflow tests**: run fixture-based n8n paths without live research or image generation providers.
 - **ImageManager decision tests**: verify allowed decisions, required fields, target stages, loop limits, client-question requirements, final-approval gating, and unavailable-action rejection.
+- **Deployment dry-run tests**: verify future deployment scripts can sanitise payloads and resolve workflow mappings without making live changes.
 - **Manual end-to-end checks**: submit representative jobs through WordPress, inspect n8n routing, confirm status updates, review generated/mock outputs, test client questions, and test targeted rework.
 
 ---
 
-## 8. Guardrails
+## 9. Guardrails
 
 The following guardrails apply throughout the build:
 
 - No secrets, API keys, credential exports, `.env` files, production webhook secrets, or private provider tokens in the repository.
 - No live provider calls before mock mode and schema validation are working.
+- No live n8n deployment before workflow validation, dry-run support, and a deployment build plan exist.
 - No broad autonomous ImageManager access; ImageManager remains bounded, schema-driven, and routed by n8n.
 - No unvalidated stage outputs should drive downstream workflow decisions.
 - No infinite loops; every retry/repair path needs loop counters, maximum attempts, and escalation behaviour.
@@ -254,7 +292,7 @@ The following guardrails apply throughout the build:
 
 ---
 
-## 9. Open Questions
+## 10. Open Questions
 
 These questions should be resolved through future build plans or decision records:
 
@@ -264,10 +302,12 @@ These questions should be resolved through future build plans or decision record
 - How should client authentication and access to job pages work?
 - Is admin approval required before final or draft images are delivered to the client?
 - Which live research provider should be integrated first?
+- Which n8n environment should receive the first deployment dry-run: development, staging, or production?
+- Should automatic deploy-on-merge ever be enabled, or should deployment remain manual?
 
 ---
 
-## 10. Next Recommended Build
+## 11. Next Recommended Build
 
 Recommended next build: **v0.2.0 — Contract & Schema Foundation**.
 
@@ -279,5 +319,6 @@ The v0.2.0 build should focus on:
 - Creating safe fake fixtures for common job and failure paths.
 - Adding validation scripts or checks that run without live providers.
 - Documenting contract ownership, versioning, and compatibility expectations.
+- Keeping future n8n workflow exports and deployment requirements in mind without adding live deployment yet.
 
-This keeps the project contract-first, mock-first, and testable before product UI, workflow JSON, or live provider integrations are added.
+This keeps the project contract-first, mock-first, deployment-aware, and testable before product UI, workflow JSON, deployment automation, or live provider integrations are added.
