@@ -45,6 +45,8 @@ Status: `Planning / Docs Update`
 | Q-0011 | Create safe fixtures and validation scripts | tests | Todo | Must happen before live providers |
 | Q-0012 | Create first plugin build plan | plugin | Todo | Should happen before feature implementation |
 | Q-0013 | Create first n8n workflow build plan | n8n | Todo | Should happen before importing/exporting workflow JSON |
+| Q-0014 | Define plugin release and update strategy | plugin/docs | Review | Added `docs/PLUGIN_RELEASES.md` to require GitHub Releases based WordPress update notifications when the plugin shell is built |
+| Q-0015 | Add GitHub Releases updater to WordPress plugin shell | plugin | Todo | Implement during the first real plugin shell build; WordPress should show update notifications after first updater-enabled ZIP install |
 
 ---
 
@@ -67,6 +69,7 @@ Ideas that may be useful later but are not active yet:
 - Optional external ImageManager service after n8n-node MVP proves itself.
 - Optional object library for common products, dimensions, and reference packs.
 - Optional visual comparison dashboard for generated versions and reworks.
+- Optional commercial plugin update/licensing server after GitHub Releases based updates prove stable.
 
 ---
 
@@ -75,3 +78,5 @@ Ideas that may be useful later but are not active yet:
 The current docs update is intentionally documentation-only.
 
 No plugin feature code, schemas, tests, workflow JSON, provider calls, or placeholder implementations should be added until a specific build plan approves them.
+
+The GitHub Releases updater requirement is now captured as planned plugin infrastructure. It should be implemented with the first real WordPress plugin shell, not as fake scaffold code before the plugin exists.
