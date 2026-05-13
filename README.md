@@ -25,7 +25,7 @@ The image model should not freestyle the answer. n8n should build a validated co
 
 Current version: `v1.0.0`
 
-Status: `Stable mock-first MVP`
+Status: `Stable mock-first MVP baseline`
 
 This repository currently contains a stable mock-first MVP: documentation, schemas, fixtures, a WordPress intake shell, an n8n mock workflow export, ImageManager prompts, a local workflow simulator, contract tests, and smoke-test tooling. Live provider integrations have not been connected yet.
 
@@ -214,6 +214,8 @@ npm run smoke
 
 See `docs/SMOKE_TEST.md`, `docs/KNOWN_LIMITATIONS.md`, and `docs/SECURITY_REVIEW.md` for release notes.
 
+The plan to bring the system into line with the original live v1 intention is tracked in `docs/LIVE_V1_ROADMAP.md`.
+
 ---
 
 ## Documentation Index
@@ -248,9 +250,9 @@ See `docs/SMOKE_TEST.md`, `docs/KNOWN_LIMITATIONS.md`, and `docs/SECURITY_REVIEW
 
 The v0.1.0 foundation locked the project objective, architecture, workflow map, ImageManager direction, repo rules, and build queue.
 
-The roadmap through v1.0.0 is complete for the mock-first MVP.
+The roadmap through v1.0.0 is complete for the mock-first MVP baseline.
 
-The next practical build should focus on productionising the MVP:
+The next practical builds should follow `docs/LIVE_V1_ROADMAP.md`:
 
 1. Run the WordPress plugin in a real PHP/WordPress environment.
 2. Import and test the n8n workflow in n8n.

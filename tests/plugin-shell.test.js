@@ -14,6 +14,11 @@ test("WordPress plugin shell exposes required MVP surfaces", () => {
   assert.match(plugin, /register_rest_route\(self::REST_NAMESPACE, '\/jobs'/);
   assert.match(plugin, /register_rest_route\(self::REST_NAMESPACE, '\/questions\/\(\?P<job_id>\[\^\/\]\+\)\/answer'/);
   assert.match(plugin, /register_rest_route\(self::REST_NAMESPACE, '\/jobs\/\(\?P<job_id>\[\^\/\]\+\)\/rework'/);
+  assert.doesNotMatch(plugin, /'permission_callback'\s*=>\s*'__return_true'/);
+  assert.match(plugin, /media_handle_upload/);
+  assert.match(plugin, /wp_get_attachment_url/);
+  assert.match(plugin, /render_admin_job_detail/);
+  assert.match(plugin, /render_final_results/);
   assert.match(plugin, /sanitize_textarea_field/);
   assert.match(plugin, /sanitize_text_field/);
   assert.match(plugin, /esc_html/);

@@ -21,6 +21,38 @@ for (const file of files) {
   if (!Array.isArray(workflow.nodes) || workflow.nodes.length === 0) {
     throw new Error(`${file} must contain at least one node.`);
   }
+  const nodeNames = new Set(workflow.nodes.map((node) => node.name));
+  const requiredNodes = [
+    "Client Submission Webhook",
+    "Build Job State",
+    "Mock Input Analysis",
+    "Mock Research and Planning",
+    "Mock Composition Blueprint",
+    "Mock Generation and Validation",
+    "Mock ImageManager Decision",
+    "Validate ImageManager Decision",
+    "Route ImageManager Decision",
+    "Respond Final Result",
+    "Respond Client Question"
+  ];
+  for (const nodeName of requiredNodes) {
+    if (!nodeNames.has(nodeName)) {
+      throw new Error(`${file} is missing required workflow node: ${nodeName}`);
+    }
+  }
+  const validateNode = workflow.nodes.find((node) => node.name === "Validate ImageManager Decision");
+  const validateCode = validateNode?.parameters?.jsCode ?? "";
+  const requiredValidationSnippets = [
+    "loop.attempt >= loop.max_attempts",
+    "ask_client decision requires",
+    "repair decisions require",
+    "approve_final requires passing final validation evidence"
+  ];
+  for (const snippet of requiredValidationSnippets) {
+    if (!validateCode.includes(snippet)) {
+      throw new Error(`${file} ImageManager validation node is missing guard: ${snippet}`);
+    }
+  }
   const serialized = JSON.stringify(workflow).toLowerCase();
   for (const forbidden of ["api_key", "apikey", "credentialid", "password", "sk-"]) {
     if (serialized.includes(forbidden)) {

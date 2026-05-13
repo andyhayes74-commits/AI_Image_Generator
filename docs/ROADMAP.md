@@ -23,9 +23,11 @@ The roadmap is the strategic map. The build queue is the active task list.
 
 ## Current Version
 
-Current active version: `v1.0.0`
+Current active version: `v1.4.0`
 
-Status: `Complete`
+Status: `Blocked`
+
+Note: `v1.0.0` is a stable mock-first baseline, not the full live-intent system described by the original architecture. WordPress runtime, n8n import, and bounded ImageManager routing have now been verified on the live-intent roadmap. Provider-backed research, vision, and image generation remain blocked until provider configuration is supplied outside the repo.
 
 ---
 
@@ -268,11 +270,11 @@ Status: `Complete`
 
 ### Goal
 
-Connect the validated composition blueprint to an image generation/editing provider and validate the result.
+Simulate the connection from a validated composition blueprint to image generation/editing and validate the mock result.
 
 ### Included
 
-- [x] Image generation/editing integration.
+- [x] Mock image generation/editing integration.
 - [x] Generation attempt records.
 - [x] Final image validation.
 - [x] Targeted repair loop.
@@ -313,23 +315,23 @@ Allow client/admin rework requests to reuse validated work and rerun only affect
 
 ---
 
-## v1.0.0 — Stable MVP Release
+## v1.0.0 — Stable Mock-First MVP Baseline
 
 Status: `Complete`
 
 ### Goal
 
-Prepare a stable portfolio-ready MVP of the scene integration system.
+Prepare a stable mock-first baseline of the scene integration system. This release proves contracts, fixtures, prompts, a WordPress shell, a mock n8n workflow export, and local simulator checks. It does not yet satisfy the full live system intention.
 
 ### Included
 
-- [x] Stable WordPress intake and result portal.
-- [x] Stable n8n mock workflow path.
-- [x] ImageManager decision layer.
-- [x] Client question loop.
-- [x] Research and validation layers.
-- [x] Image generation and final QA.
-- [x] Rework support.
+- [x] WordPress intake shell.
+- [x] n8n mock workflow path.
+- [x] ImageManager prompts, schema, fixtures, and simulator routing.
+- [x] Client question and answer packet contracts.
+- [x] Mock research and validation layers.
+- [x] Mock image generation and final QA packets.
+- [x] Mock rework support.
 - [x] Documentation pass.
 - [x] Security and secrets review.
 
@@ -340,3 +342,7 @@ Prepare a stable portfolio-ready MVP of the scene integration system.
 - [x] Known limitations listed.
 - [x] Docs complete enough for Codex and a human maintainer.
 - [x] No secrets exposed in repo or logs.
+
+### Known Gap
+
+The live-intent MVP still requires provider-backed input intelligence, real research/vision/image adapters, final live image display, live question/resume wiring, and targeted rework across WordPress and n8n. See `docs/LIVE_V1_ROADMAP.md`.

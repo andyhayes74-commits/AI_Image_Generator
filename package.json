@@ -7,6 +7,9 @@
   "scripts": {
     "validate:fixtures": "node scripts/validate-fixtures.js",
     "validate:workflow": "node scripts/validate-workflow-json.js",
+    "validate:n8n-import": "node scripts/validate-n8n-import.js",
+    "lint:php": "php -l plugin/ai-image-generator.php",
+    "smoke:wordpress": "node scripts/wordpress-smoke-test.js",
     "smoke": "node scripts/run-smoke-test.js",
     "test": "node --test tests/*.test.js"
   },

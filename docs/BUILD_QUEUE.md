@@ -8,9 +8,9 @@ Use this file for small practical tasks. Use `docs/ROADMAP.md` for version direc
 
 ## Active Build
 
-Current active build: `v1.0.0 — Stable Mock-First MVP`
+Current active build: `v1.4.0 — Input Intelligence & Research Workers`
 
-Status: `Complete`
+Status: `Blocked`
 
 ---
 
@@ -45,6 +45,10 @@ Status: `Complete`
 | Q-0011 | Create safe fixtures and validation scripts | tests | Done | Fixture validation runs with `npm test` |
 | Q-0012 | Create first plugin build plan | plugin | Done | Plugin shell built against schema contracts |
 | Q-0013 | Create first n8n workflow build plan | n8n | Done | Mock master workflow export added |
+| Q-0014 | Correct roadmap over-claims from v1.0 audit | docs | Done | Mark current v1.0 as mock-first baseline and track live-intent gap |
+| Q-0015 | WordPress runtime hardening plan | plugin | Done | Real activation, media handling, permissions, result display |
+| Q-0016 | n8n schema-true workflow plan | n8n | Done | Schema-valid final result, ImageManager routing, question/resume |
+| Q-0017 | Provider adapter plan | integration | Blocked | Needs provider choice and credentials for live research, vision validation, and image generation |
 
 ---
 
@@ -59,7 +63,7 @@ Status: `Complete`
 - `v0.7.0 — Planning, Collision, Functional Use & Environmental Effects` added mock planning and validation layers.
 - `v0.8.0 — Image Generation & Final Validation Loop` added mock generation attempts, final validation, and final result routing.
 - `v0.9.0 — Targeted Rework Layer` added rework classification and dependency routing.
-- `v1.0.0 — Stable MVP Release` completed the smoke-test, documentation, known limitations, and security review pass.
+- `v1.0.0 — Stable Mock-First MVP Baseline` completed the smoke-test, documentation, known limitations, and security review pass.
 
 ---
 
@@ -81,6 +85,6 @@ Ideas that may be useful later but are not active yet:
 
 ## Current Build Notes
 
-The stable mock-first MVP is complete. The next build should productionise one integration at a time in a real WordPress/n8n environment.
+The stable mock-first MVP is complete. WordPress runtime hardening, n8n import validation, and bounded ImageManager routing are now verified. The live roadmap is blocked at provider-backed input intelligence because no research/vision/image provider credential is available in the repo.
 
 No production credentials, provider keys, or live webhook secrets should be committed.

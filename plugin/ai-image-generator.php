@@ -48,7 +48,7 @@ final class AI_Image_Generator_Plugin
             ],
             'public' => false,
             'show_ui' => true,
-            'show_in_menu' => false,
+            'show_in_menu' => 'ai-image-generator',
             'supports' => ['title'],
             'capability_type' => 'post',
         ]);
@@ -91,7 +91,7 @@ final class AI_Image_Generator_Plugin
         register_rest_route(self::REST_NAMESPACE, '/jobs', [
             'methods' => 'POST',
             'callback' => [__CLASS__, 'handle_job_submission'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [__CLASS__, 'can_submit_job'],
             'args' => [
                 'summary' => ['required' => true],
                 'target_object' => ['required' => true],
@@ -102,14 +102,34 @@ final class AI_Image_Generator_Plugin
         register_rest_route(self::REST_NAMESPACE, '/questions/(?P<job_id>[^/]+)/answer', [
             'methods' => 'POST',
             'callback' => [__CLASS__, 'handle_client_answer'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [__CLASS__, 'can_update_job'],
         ]);
 
         register_rest_route(self::REST_NAMESPACE, '/jobs/(?P<job_id>[^/]+)/rework', [
             'methods' => 'POST',
             'callback' => [__CLASS__, 'handle_rework_request'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [__CLASS__, 'can_update_job'],
         ]);
+    }
+
+    public static function can_submit_job(WP_REST_Request $request): bool
+    {
+        if (current_user_can('upload_files')) {
+            return true;
+        }
+
+        $nonce = $request->get_header('X-WP-Nonce');
+        return is_string($nonce) && wp_verify_nonce($nonce, 'wp_rest');
+    }
+
+    public static function can_update_job(WP_REST_Request $request): bool
+    {
+        if (current_user_can('edit_posts')) {
+            return true;
+        }
+
+        $nonce = $request->get_header('X-WP-Nonce');
+        return is_string($nonce) && wp_verify_nonce($nonce, 'wp_rest');
     }
 
     public static function render_settings_page(): void
@@ -138,6 +158,7 @@ final class AI_Image_Generator_Plugin
             <?php echo self::render_submission_form(); ?>
             <h2><?php echo esc_html__('Recent Jobs', 'ai-image-generator'); ?></h2>
             <?php echo self::render_job_status_list(); ?>
+            <?php echo self::render_admin_job_detail(); ?>
         </div>
         <?php
     }
@@ -186,6 +207,60 @@ final class AI_Image_Generator_Plugin
         return $output;
     }
 
+    private static function render_admin_job_detail(): string
+    {
+        $job_id = isset($_GET['aiig_job_id']) ? absint($_GET['aiig_job_id']) : 0;
+        if ($job_id <= 0 || get_post_type($job_id) !== self::POST_TYPE) {
+            return '';
+        }
+
+        $submission = self::decode_meta_json($job_id, '_aiig_submission_packet');
+        $questions = self::decode_meta_json($job_id, '_aiig_client_questions');
+        $answers = self::decode_meta_json($job_id, '_aiig_client_answers');
+        $reworks = self::decode_meta_json($job_id, '_aiig_rework_requests');
+        $finals = self::decode_meta_json($job_id, '_aiig_final_results');
+
+        ob_start();
+        ?>
+        <hr>
+        <h2><?php echo esc_html__('Job Detail', 'ai-image-generator'); ?></h2>
+        <?php echo self::render_packet_block(__('Submission Packet', 'ai-image-generator'), $submission); ?>
+        <?php echo self::render_packet_block(__('Questions', 'ai-image-generator'), $questions); ?>
+        <?php echo self::render_packet_block(__('Answers', 'ai-image-generator'), $answers); ?>
+        <?php echo self::render_packet_block(__('Rework Requests', 'ai-image-generator'), $reworks); ?>
+        <?php echo self::render_final_results($finals); ?>
+        <?php
+        return (string) ob_get_clean();
+    }
+
+    private static function render_packet_block(string $title, $packet): string
+    {
+        return '<h3>' . esc_html($title) . '</h3><pre>' . esc_html(wp_json_encode($packet, JSON_PRETTY_PRINT)) . '</pre>';
+    }
+
+    private static function render_final_results($finals): string
+    {
+        if (!is_array($finals) || empty($finals)) {
+            return '<h3>' . esc_html__('Final Outputs', 'ai-image-generator') . '</h3><p>' . esc_html__('No final outputs yet.', 'ai-image-generator') . '</p>';
+        }
+
+        $output = '<h3>' . esc_html__('Final Outputs', 'ai-image-generator') . '</h3><div class="aiig-final-results">';
+        foreach ($finals as $final) {
+            $image = $final['image'] ?? [];
+            $uri = isset($image['uri']) ? esc_url($image['uri']) : '';
+            $version = isset($final['version']) ? absint($final['version']) : 0;
+            $output .= '<figure>';
+            if ($uri !== '') {
+                $output .= '<img src="' . $uri . '" alt="' . esc_attr(sprintf(__('AI image result version %d', 'ai-image-generator'), $version)) . '" style="max-width:320px;height:auto;">';
+            }
+            $output .= '<figcaption>' . esc_html(sprintf(__('Version %d: %s', 'ai-image-generator'), $version, $final['status'] ?? 'unknown')) . '</figcaption>';
+            $output .= '</figure>';
+        }
+        $output .= '</div>';
+
+        return $output;
+    }
+
     public static function handle_job_submission(WP_REST_Request $request): WP_REST_Response
     {
         $packet = self::build_submission_packet($request);
@@ -228,6 +303,7 @@ final class AI_Image_Generator_Plugin
         ];
 
         self::append_job_meta_entry($job_id, '_aiig_client_answers', $packet);
+        self::update_job_status_by_job_id($job_id, 'researching');
 
         return new WP_REST_Response($packet, 200);
     }
@@ -247,6 +323,7 @@ final class AI_Image_Generator_Plugin
         ];
 
         self::append_job_meta_entry($job_id, '_aiig_rework_requests', $packet);
+        self::update_job_status_by_job_id($job_id, 'rework_requested');
 
         return new WP_REST_Response($packet, 201);
     }
@@ -256,7 +333,7 @@ final class AI_Image_Generator_Plugin
         $job_id = 'img-job-' . gmdate('YmdHis') . '-' . wp_generate_password(6, false, false);
         $constraints = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', (string) $request->get_param('constraints'))));
 
-        return [
+        $packet = [
             'submission_id' => 'sub-' . wp_generate_uuid4(),
             'job_id' => $job_id,
             'submitted_at' => gmdate('c'),
@@ -271,6 +348,8 @@ final class AI_Image_Generator_Plugin
             'assets' => self::collect_uploaded_assets(),
             'requested_mode' => 'mock',
         ];
+
+        return self::normalise_submission_packet($packet);
     }
 
     private static function collect_uploaded_assets(): array
@@ -287,12 +366,15 @@ final class AI_Image_Generator_Plugin
                 continue;
             }
             $file = $_FILES[$field];
+            $attachment_id = self::handle_uploaded_file($field);
+            $uri = $attachment_id > 0 ? wp_get_attachment_url($attachment_id) : sanitize_file_name((string) $file['name']);
             $assets[] = [
                 'asset_id' => 'asset-' . sanitize_key($field) . '-' . wp_generate_password(6, false, false),
                 'declared_role' => $role,
                 'media_type' => sanitize_mime_type((string) $file['type']),
-                'uri' => sanitize_file_name((string) $file['name']),
+                'uri' => $uri ?: sanitize_file_name((string) $file['name']),
                 'client_label' => sanitize_text_field((string) $file['name']),
+                'attachment_id' => $attachment_id,
             ];
         }
 
@@ -307,6 +389,38 @@ final class AI_Image_Generator_Plugin
         }
 
         return $assets;
+    }
+
+    private static function handle_uploaded_file(string $field): int
+    {
+        if (!function_exists('media_handle_upload')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/media.php';
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+        }
+
+        if (empty($_FILES[$field]['name'])) {
+            return 0;
+        }
+
+        $attachment_id = media_handle_upload($field, 0);
+        if (is_wp_error($attachment_id)) {
+            return 0;
+        }
+
+        return (int) $attachment_id;
+    }
+
+    private static function normalise_submission_packet(array $packet): array
+    {
+        foreach ($packet['assets'] as &$asset) {
+            if (isset($asset['attachment_id']) && (int) $asset['attachment_id'] <= 0) {
+                unset($asset['attachment_id']);
+            }
+        }
+        unset($asset);
+
+        return $packet;
     }
 
     private static function send_to_n8n(array $packet): array
@@ -341,6 +455,29 @@ final class AI_Image_Generator_Plugin
 
     private static function append_job_meta_entry(string $job_id, string $meta_key, array $entry): void
     {
+        $job = self::find_job_by_job_id($job_id);
+        if (!$job) {
+            return;
+        }
+
+        $existing = self::decode_meta_json($job->ID, $meta_key);
+        if (!is_array($existing)) {
+            $existing = [];
+        }
+        $existing[] = $entry;
+        update_post_meta($job->ID, $meta_key, wp_json_encode($existing));
+    }
+
+    private static function update_job_status_by_job_id(string $job_id, string $status): void
+    {
+        $job = self::find_job_by_job_id($job_id);
+        if ($job) {
+            update_post_meta($job->ID, '_aiig_status', sanitize_key($status));
+        }
+    }
+
+    private static function find_job_by_job_id(string $job_id): ?WP_Post
+    {
         $jobs = get_posts([
             'post_type' => self::POST_TYPE,
             'title' => $job_id,
@@ -349,15 +486,16 @@ final class AI_Image_Generator_Plugin
         ]);
 
         if (empty($jobs)) {
-            return;
+            return null;
         }
 
-        $existing = json_decode((string) get_post_meta($jobs[0]->ID, $meta_key, true), true);
-        if (!is_array($existing)) {
-            $existing = [];
-        }
-        $existing[] = $entry;
-        update_post_meta($jobs[0]->ID, $meta_key, wp_json_encode($existing));
+        return $jobs[0];
+    }
+
+    private static function decode_meta_json(int $post_id, string $meta_key)
+    {
+        $decoded = json_decode((string) get_post_meta($post_id, $meta_key, true), true);
+        return is_array($decoded) ? $decoded : [];
     }
 
     private static function classify_rework_impact(string $change): string

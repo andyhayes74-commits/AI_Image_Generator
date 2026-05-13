@@ -17,7 +17,43 @@ This file tracks bugs found during development and testing.
 
 ## Active Bugs
 
-No bugs logged yet.
+## BUG-0001 — v1.0.0 roadmap overstates live system completion
+
+Status: `Fixed`
+Severity: `Medium`
+Area: `docs`
+Version Found: `v1.0.0`
+Date Found: `2026-05-12`
+
+### Summary
+
+The original `v1.0.0` roadmap marked live-intent work complete even though the implementation was a mock-first baseline. The docs now identify `v1.0.0` as a stable mock-first MVP baseline and track the live-intent work in `docs/LIVE_V1_ROADMAP.md`.
+
+### Steps to Reproduce
+
+1. Read the previous `docs/ROADMAP.md` v1.0.0 section.
+2. Compare it with `docs/KNOWN_LIMITATIONS.md`.
+3. Note that live provider, runtime WordPress, and real n8n routing work was not complete.
+
+### Expected Result
+
+Roadmap language should distinguish verified mock-first behavior from planned live behavior.
+
+### Actual Result
+
+Roadmap checkboxes implied live behavior had been completed.
+
+### Notes / Evidence
+
+The audit found missing WordPress runtime verification, schema-true n8n final result output, ImageManager routing inside n8n, live provider adapters, and real question/resume wiring.
+
+### Fix Notes
+
+Added `docs/LIVE_V1_ROADMAP.md` and updated roadmap/build queue/README wording to describe `v1.0.0` as the mock-first baseline.
+
+### Verification
+
+Reviewed roadmap text and ran `git diff --check`.
 
 ---
 

@@ -1,5 +1,6 @@
 {
-  "name": "AI Image Generator - Master Job Controller Mock",
+  "id": "aiig-master-job-controller-mock",
+  "name": "AI Image Generator - Master Job Controller Contract Mock",
   "nodes": [
     {
       "parameters": {
@@ -17,91 +18,151 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "return { json: { ...$json, status: 'intake_analysis', mock_mode: true } };"
+        "jsCode": "const now = new Date().toISOString(); const job_id = $json.job_id; return { json: { job_state: { job_id, status: 'intake_analysis', client_inputs: $json, assets: {}, loop_counts: { intake_analysis: { attempt: 1, max_attempts: 3 }, imagemanager: { attempt: 1, max_attempts: 5 } }, validation_results: [], generation_attempts: [], questions: [], rework_requests: [], final_outputs: [], created_at: now, updated_at: now }, latest_stage_result: null } };"
+      },
+      "id": "build-job-state",
+      "name": "Build Job State",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const now = new Date().toISOString(); const job_id = $json.job_state.job_id; const result = { result_id: 'stage-input-0001', job_id, stage: 'intake_analysis', status: 'passed', summary: 'Mock input analysis found usable scene/object intent.', outputs: { classified_assets: $json.job_state.client_inputs.assets.map(asset => ({ asset_id: asset.asset_id, detected_role: asset.declared_role, quality: 'usable' })), needs_client_clarification: false }, validation: { validation_id: 'val-input-0001', job_id, stage: 'intake_analysis', passed: true, score: 0.9, summary: 'Input packet is usable for mock workflow.', issues: [], evidence: [{ source_type: 'mock_fixture', summary: 'n8n contract mock input analysis.', confidence: 1 }], checked_at: now }, evidence: [{ source_type: 'client_input', summary: 'Client submission packet received.', confidence: 0.9 }], created_at: now }; return { json: { ...$json, latest_stage_result: result, validation_results: [result.validation] } };"
       },
       "id": "mock-input-analysis",
       "name": "Mock Input Analysis",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [240, 0]
+      "position": [460, 0]
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "return { json: { ...$json, status: 'researching', research: { provider: 'mock', confidence: 0.82 } } };"
+        "jsCode": "const now = new Date().toISOString(); const job_id = $json.job_state.job_id; const result = { result_id: 'stage-research-0001', job_id, stage: 'researching', status: 'passed', summary: 'Mock research and planning produced dimensions and requirements.', outputs: { dimensions: { width_cm: 18, depth_cm: 20, height_cm: 40, confidence: 0.72 }, functional_requirements: ['stable surface', 'nearby power socket', 'safe cable path'], sources: [{ source_type: 'mock_fixture', summary: 'Mock research source.', confidence: 0.82 }] }, validation: { validation_id: 'val-research-0001', job_id, stage: 'researching', passed: true, score: 0.86, summary: 'Research packet has evidence and confidence.', issues: [], evidence: [{ source_type: 'mock_fixture', summary: 'n8n contract mock research.', confidence: 1 }], checked_at: now }, evidence: [{ source_type: 'mock_fixture', summary: 'Mock research worker output.', confidence: 1 }], created_at: now }; return { json: { ...$json, latest_stage_result: result, validation_results: [...$json.validation_results, result.validation] } };"
       },
       "id": "mock-research-planning",
       "name": "Mock Research and Planning",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [480, 0]
+      "position": [700, 0]
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "return { json: { ...$json, status: 'complete', final_result: { result_id: 'final-mock', job_id: $json.job_id, version: 1, status: 'approved' } } };"
+        "jsCode": "const now = new Date().toISOString(); const job_id = $json.job_state.job_id; const result = { result_id: 'stage-blueprint-0001', job_id, stage: 'composition_blueprint', status: 'passed', summary: 'Mock composition blueprint is ready for generation.', outputs: { object_identity: $json.job_state.client_inputs.client_brief.target_object, placement: 'worktop near socket', scale: 'countertop appliance scale', perspective: 'aligned to counter plane', functional_details: ['visible cable to socket'], environmental_effects: ['contact shadow', 'mild worktop reflection'] }, validation: { validation_id: 'val-blueprint-0001', job_id, stage: 'composition_blueprint', passed: true, score: 0.9, summary: 'Blueprint contains placement, scale, function, and environment details.', issues: [], evidence: [{ source_type: 'mock_fixture', summary: 'n8n contract mock blueprint.', confidence: 1 }], checked_at: now }, evidence: [{ source_type: 'validated_inference', summary: 'Blueprint assembled from mock research and input analysis.', confidence: 0.9 }], created_at: now }; return { json: { ...$json, latest_stage_result: result, validation_results: [...$json.validation_results, result.validation] } };"
+      },
+      "id": "mock-composition-blueprint",
+      "name": "Mock Composition Blueprint",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [940, 0]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const now = new Date().toISOString(); const job_id = $json.job_state.job_id; const validation = { validation_id: 'val-final-0001', job_id, stage: 'final_validation', passed: true, score: 0.88, summary: 'The mock final output matches the validated blueprint.', issues: [], evidence: [{ source_type: 'mock_fixture', summary: 'n8n mock final validation.', confidence: 1 }], checked_at: now }; const final_result = { result_id: 'final-0001', job_id, version: 1, status: 'approved', image: { asset_id: 'asset-final-001', uri: `mock://outputs/${job_id}/final-v1.webp`, media_type: 'image/webp', width: 1600, height: 1200 }, validation, generation_attempt_id: 'gen-0001', created_at: now }; return { json: { ...$json, generation_attempt: { attempt_id: 'gen-0001', stage: 'generating', status: 'mocked', provider: 'mock', output_asset_id: 'asset-final-001', created_at: now }, final_result, validation_results: [...$json.validation_results, validation] } };"
       },
       "id": "mock-generation-validation",
       "name": "Mock Generation and Validation",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [720, 0]
+      "position": [1180, 0]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const now = new Date().toISOString(); const job_id = $json.job_state.job_id; const decision = { decision_id: 'im-n8n-mock-0001', job_id, decision: 'approve_final', priority: 'low', reason: 'Final validation passed with sufficient score.', repair_instructions: [], ask_client: false, client_question: null, final_validation_evidence: [$json.final_result.validation], next_status: 'complete', created_at: now }; return { json: { ...$json, imagemanager_decision: decision } };"
+      },
+      "id": "mock-imagemanager-decision",
+      "name": "Mock ImageManager Decision",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1420, 0]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const decision = $json.imagemanager_decision; const allowed = ['continue','retry_stage','repair_stage','rerun_research','ask_client','request_admin_review','approve_final','reject_final','start_targeted_rework']; if (!decision || !allowed.includes(decision.decision)) { throw new Error('Invalid ImageManager decision'); } const loop = $json.job_state?.loop_counts?.imagemanager ?? { attempt: 1, max_attempts: 5 }; const repairDecisions = ['retry_stage','repair_stage','rerun_research','start_targeted_rework']; if (repairDecisions.includes(decision.decision) && loop.attempt >= loop.max_attempts) { decision.decision = 'request_admin_review'; decision.priority = 'high'; decision.reason = `ImageManager loop limit reached after ${loop.attempt} attempts.`; decision.next_status = 'admin_review'; decision.ask_client = false; decision.client_question = null; decision.repair_instructions = ['Admin review required before additional automated repair.']; } if (decision.decision === 'ask_client') { const question = decision.client_question; if (!decision.ask_client || !decision.target_stage || !question || !question.question_id || !question.question_text || decision.next_status !== 'awaiting_client_answer') { throw new Error('ask_client decision requires a schema-shaped client question and awaiting status'); } } if (['retry_stage','repair_stage','start_targeted_rework'].includes(decision.decision)) { if (!decision.target_stage || !Array.isArray(decision.repair_instructions) || decision.repair_instructions.length === 0) { throw new Error('repair decisions require target_stage and repair_instructions'); } } if (decision.decision === 'rerun_research' && decision.target_stage !== 'researching') { throw new Error('rerun_research must target researching'); } if (decision.decision === 'approve_final') { const evidence = decision.final_validation_evidence ?? []; const passingFinal = evidence.some(item => item.stage === 'final_validation' && item.passed === true && item.score >= 0.8); if (decision.next_status !== 'complete' || !passingFinal) { throw new Error('approve_final requires passing final validation evidence'); } } return { json: { ...$json, imagemanager_decision: decision } };"
+      },
+      "id": "validate-imagemanager-decision",
+      "name": "Validate ImageManager Decision",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1660, 0]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.imagemanager_decision.decision }}",
+        "rules": {
+          "rules": [
+            { "value2": "approve_final" },
+            { "value2": "ask_client" },
+            { "value2": "repair_stage" }
+          ]
+        },
+        "fallbackOutput": 0
+      },
+      "id": "route-imagemanager-decision",
+      "name": "Route ImageManager Decision",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [1900, 0]
     },
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ $json }}"
+        "responseBody": "={{ { job_id: $json.job_state.job_id, status: 'complete', final_result: $json.final_result, imagemanager_decision: $json.imagemanager_decision } }}"
       },
       "id": "respond-final-result",
       "name": "Respond Final Result",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [960, 0]
+      "position": [2140, -160]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { job_id: $json.job_state.job_id, status: 'awaiting_client_answer', client_question: $json.imagemanager_decision.client_question } }}"
+      },
+      "id": "respond-client-question",
+      "name": "Respond Client Question",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2140, 80]
     }
   ],
   "connections": {
     "Client Submission Webhook": {
-      "main": [
-        [
-          {
-            "node": "Mock Input Analysis",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Build Job State", "type": "main", "index": 0 }]]
+    },
+    "Build Job State": {
+      "main": [[{ "node": "Mock Input Analysis", "type": "main", "index": 0 }]]
     },
     "Mock Input Analysis": {
-      "main": [
-        [
-          {
-            "node": "Mock Research and Planning",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Mock Research and Planning", "type": "main", "index": 0 }]]
     },
     "Mock Research and Planning": {
-      "main": [
-        [
-          {
-            "node": "Mock Generation and Validation",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Mock Composition Blueprint", "type": "main", "index": 0 }]]
+    },
+    "Mock Composition Blueprint": {
+      "main": [[{ "node": "Mock Generation and Validation", "type": "main", "index": 0 }]]
     },
     "Mock Generation and Validation": {
+      "main": [[{ "node": "Mock ImageManager Decision", "type": "main", "index": 0 }]]
+    },
+    "Mock ImageManager Decision": {
+      "main": [[{ "node": "Validate ImageManager Decision", "type": "main", "index": 0 }]]
+    },
+    "Validate ImageManager Decision": {
+      "main": [[{ "node": "Route ImageManager Decision", "type": "main", "index": 0 }]]
+    },
+    "Route ImageManager Decision": {
       "main": [
-        [
-          {
-            "node": "Respond Final Result",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [{ "node": "Respond Final Result", "type": "main", "index": 0 }],
+        [{ "node": "Respond Client Question", "type": "main", "index": 0 }]
       ]
     }
   },
@@ -113,7 +174,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "aiig-v0-4-0-mock",
+  "versionId": "aiig-v1-2-0-contract-mock",
   "triggerCount": 1,
-  "tags": ["ai-image-generator", "mock"]
+  "tags": []
 }
